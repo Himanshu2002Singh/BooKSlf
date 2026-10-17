@@ -48,6 +48,7 @@ never commit them. Only the `.env.example` files are committed.
 | `backend/.env` | `SESSION_SECRET` | Long random string that signs session cookies |
 | `backend/.env` | `GOOGLE_CLIENT_ID` | Google OAuth **client ID** (see below) |
 | `backend/.env` | `APP_ORIGIN` | Site address used in password-reset links |
+| `backend/.env` | `GEMINI_API_KEY` | Google AI Studio API key that reads shelf photos |
 | `frontend/.env` | `VITE_GOOGLE_CLIENT_ID` | The same Google client ID |
 | `frontend/.env` | `VITE_RAZORPAY_KEY_ID` | Razorpay test key id (`rzp_test_…`) |
 
@@ -84,7 +85,20 @@ Vite builds those into the public JavaScript.
 - There are six shelf looks. Light, Gradient and Dark Grid are free. Digital Shelf,
   Spine Shelf and MacOS are premium (₹749 / ₹1,249 / ₹1,749 + 18% GST).
 - The Goodreads import is real: the backend reads the reader's public "Read" and
-  "Currently Reading" shelves. Photo recognition is still simulated with catalog titles.
+  "Currently Reading" shelves.
+- Shelf photos are read by Gemini (`gemini-3.5-flash-lite`, minimal thinking) through
+  `POST /api/books/scan`. The browser first shrinks the photo to about 2 megapixels and
+  under ~730 KB of JPEG; a pixel budget rather than a longest edge keeps panoramas readable.
+  The backend asks Gemini for up to 40 titles and authors, skipping magazines, notebooks and
+  films. It then finds covers on Open Library, five books per query (a 40-book shelf is
+  eight calls), within 8 seconds in all. Books keep the title and author Gemini read; Open
+  Library adds the cover, year and id. Books with no author are left out, and repeats are
+  dropped. The answer's `capped` flag tells the panel to suggest photographing the rest of a
+  bigger shelf. Gemini gets one retry when it's overloaded. The route needs a signed-in
+  reader and allows 20 scans per 10 minutes per reader. Photos are never stored. A scan
+  usually takes 3–9 seconds. The free tier is enough to start; its daily quota is shared
+  by every reader, and Google may use free-tier photos to improve its products (the privacy
+  policy says so).
 - The book library searches Open Library through `GET /api/books/search?q=…` (free, no
   key, about 3 requests a second). The panel waits 350 ms after typing stops (debounce).
   The route needs a signed-in reader, allows 30 searches a minute per reader, starts
@@ -116,7 +130,8 @@ Both apps deploy to Vercel from this repo on every push to `main`:
   `VITE_RAZORPAY_KEY_ID`.
 - **Backend**: Vercel project `bookshlf-api` with root directory `backend/`
   (https://bookshlf-api.vercel.app). Vercel runs the Express app exported from `app.js`.
-  Needs `DATABASE_URL`, `SESSION_SECRET`, `GOOGLE_CLIENT_ID` and `APP_ORIGIN`.
+  Needs `DATABASE_URL`, `SESSION_SECRET`, `GOOGLE_CLIENT_ID`, `APP_ORIGIN` and
+  `GEMINI_API_KEY`.
 - `frontend/vercel.json` proxies `/api/*` to the backend, so the browser only ever talks
   to the frontend's domain and the session cookie stays first-party. Every other path
   goes to the app, so deep links work.
@@ -144,8 +159,8 @@ Both apps deploy to Vercel from this repo on every push to `main`:
   (no-store + JSON-only writes), `rateLimit` (per-reader request limits) and `error`
   (404 and error responses).
 - `services/`: outside systems: Google token checks, the Goodreads import, Open Library
-  book search, and email.
-- `validators/`: input rules for email, password, shelf data and usernames.
+  book search and matching, Gemini shelf-photo reading, and email.
+- `validators/`: input rules for email, password, shelf data, usernames and shelf photos.
 - `utils/`: `HttpError`, password hashing and session cookies.
 - `db/`: `schema.sql`, the connection pool and the `db:setup` script.
 - `test/`: API tests (`api.test.js`) and unit tests (`unit.test.js`).
