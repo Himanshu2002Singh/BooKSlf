@@ -314,3 +314,28 @@ test('rate limit: each reader gets their own allowance, then 429 with Retry-Afte
   slow({ user: { id: 'reader-1' } }, response, next);
   assert.throws(() => slow({ user: { id: 'reader-1' } }, response, next), { status: 429, message: /in 10 minutes/ });
 });
+
+test('payments: amount calculation includes 18% GST and rejects unknown themes', async () => {
+  const { calculateAmountPaise } = await import('../services/payment.service.js');
+  assert.equal(calculateAmountPaise('digital-shelf'), 88382);
+  assert.equal(calculateAmountPaise('spine-shelf'), 147382);
+  assert.equal(calculateAmountPaise('macos'), 206382);
+  assert.throws(() => calculateAmountPaise('free-theme'), { status: 400, message: /Unknown theme/ });
+});
+
+test('payments: signature verification validates HMAC SHA256 and rejects tampering', async () => {
+  const { createHmac } = await import('node:crypto');
+  const { verifyPayment } = await import('../services/payment.service.js');
+  process.env.RAZORPAY_KEY_SECRET = 'test_secret_12345';
+
+  const orderId = 'order_test_123';
+  const paymentId = 'pay_test_456';
+  const validSignature = createHmac('sha256', 'test_secret_12345').update(`${orderId}|${paymentId}`).digest('hex');
+
+  // Missing fields
+  await assert.rejects(verifyPayment({ userId: 'u1', orderId: '', paymentId, signature: validSignature, themeId: 'macos' }), { status: 400 });
+  // Tampered signature
+  await assert.rejects(verifyPayment({ userId: 'u1', orderId, paymentId, signature: 'wrong_signature', themeId: 'macos' }), { status: 400, message: /Invalid payment signature/ });
+
+  delete process.env.RAZORPAY_KEY_SECRET;
+});

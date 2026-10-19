@@ -8,8 +8,7 @@ let checkoutScript = null;
 export const razorpayKeyId = (import.meta.env.VITE_RAZORPAY_KEY_ID || '').trim();
 
 export function razorpayConfigError(key = razorpayKeyId) {
-  if (!key) return 'Razorpay is not configured. Add VITE_RAZORPAY_KEY_ID (a rzp_test_ key) to frontend/.env and restart the dev server.';
-  if (!key.startsWith('rzp_test_')) return 'Only Razorpay test keys (rzp_test_…) are accepted until server-side orders are added.';
+  if (!key) return 'Razorpay is not configured. Add VITE_RAZORPAY_KEY_ID to frontend/.env and restart the dev server.';
   return '';
 }
 
@@ -39,8 +38,9 @@ export class PaymentError extends Error {
 
 // onOpen fires once Checkout is handed control; Razorpay reports a bad key with
 // its own alert and no callback, so callers must not wait on the promise for UI state.
-export async function payWithRazorpay({ amountPaise, description, prefill, notes, onOpen }) {
-  const configError = razorpayConfigError();
+export async function payWithRazorpay({ orderId, keyId, amountPaise, description, prefill, notes, onOpen }) {
+  const activeKey = keyId || razorpayKeyId;
+  const configError = razorpayConfigError(activeKey);
   if (configError) throw new PaymentError(configError, 'config');
   const Razorpay = await loadCheckout().catch(error => { throw new PaymentError(error.message, 'network'); });
 
@@ -49,15 +49,20 @@ export async function payWithRazorpay({ amountPaise, description, prefill, notes
     // last failure is reported only if they close it without paying.
     let lastFailure = null;
     const checkout = new Razorpay({
-      key: razorpayKeyId,
+      key: activeKey,
       amount: amountPaise,
       currency: 'INR',
       name: 'Bookshelf.cv',
       description,
+      ...(orderId ? { order_id: orderId } : {}),
       prefill,
       notes,
       theme: { color: '#e13a00' },
-      handler: response => resolve({ paymentId: response.razorpay_payment_id }),
+      handler: response => resolve({
+        paymentId: response.razorpay_payment_id,
+        orderId: response.razorpay_order_id || orderId,
+        signature: response.razorpay_signature,
+      }),
       modal: {
         ondismiss: () => reject(lastFailure || new PaymentError('Payment was cancelled. You have not been charged.', 'dismissed')),
       },

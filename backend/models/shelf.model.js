@@ -23,3 +23,15 @@ export async function save(userId, shelf) {
   );
   return clean;
 }
+
+export async function unlockTheme(userId, themeId) {
+  const current = await get(userId);
+  const purchased = new Set(current.purchasedThemeIds || []);
+  purchased.add(themeId);
+  const updatedPurchased = [...purchased];
+  await query(
+    'UPDATE shelves SET theme_id = ?, purchased_theme_ids = ? WHERE user_id = ?',
+    [themeId, JSON.stringify(updatedPurchased), userId],
+  );
+  return get(userId);
+}

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getTheme, themePrice } from '../../data/themes.js';
+import { api } from '../../lib/api.js';
 import { payWithRazorpay, razorpayConfigError } from './razorpay.js';
 import '../../styles/purchase.css';
 
@@ -39,14 +40,29 @@ export default function Checkout({ theme, name = '', email = '', onBack, onPaid 
 
     setPaying(true);
     try {
-      const { paymentId } = await payWithRazorpay({
-        amountPaise: Math.round(total * 100),
+      const order = await api('/payments/order', { method: 'POST', body: { themeId: chosen.id } });
+
+      const payment = await payWithRazorpay({
+        orderId: order.orderId,
+        keyId: order.keyId,
+        amountPaise: order.amount || Math.round(total * 100),
         description: `${chosen.name} theme`,
         prefill: { name: form.name.trim(), email: form.email.trim(), ...(form.phone ? { contact: `+91${form.phone.replace(/\s+/g, '')}` } : {}) },
         notes: { theme_id: chosen.id, billing_country: form.country, ...(form.business ? { gstin: form.gstin.trim() } : {}) },
         onOpen: () => setPaying(false),
       });
-      onPaid({ themeId: chosen.id, paymentId });
+
+      await api('/payments/verify', {
+        method: 'POST',
+        body: {
+          themeId: chosen.id,
+          orderId: payment.orderId,
+          paymentId: payment.paymentId,
+          signature: payment.signature,
+        },
+      });
+
+      onPaid({ themeId: chosen.id, paymentId: payment.paymentId });
     } catch (paymentError) {
       setError(paymentError.message);
       setPaying(false);
