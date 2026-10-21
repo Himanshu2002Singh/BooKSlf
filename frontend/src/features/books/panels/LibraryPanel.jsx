@@ -56,7 +56,7 @@ export default function LibraryPanel({ hidden, books, shelf, onToggle, onRemove,
       <div className="fg-book-grid">
         {search.books.map(book => {
           const picked = shelfKeys.has(bookKey(book));
-          return <BookCard key={book.id} book={book} selected={picked} action={picked ? 'Selected' : 'Select'} onAction={() => onToggle(book)} />;
+          return <BookCard key={book.id} book={book} selected={picked} showSubtitle action={picked ? 'Selected' : 'Select'} onAction={() => onToggle(book)} />;
         })}
       </div>
     );

@@ -5,6 +5,7 @@ import GoodreadsPanel from './panels/GoodreadsPanel.jsx';
 import LibraryPanel from './panels/LibraryPanel.jsx';
 import PhotoPanel from './panels/PhotoPanel.jsx';
 import Modal from '../../components/Modal.jsx';
+import { shortTitle } from '../../lib/names.js';
 
 const methods = [
   { id: 'goodreads', icon: '📖', title: 'Connect Goodreads', sub: 'Import your read shelves', link: 'Connect account →' },
@@ -43,7 +44,7 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
 
   function saveBook(book) {
     const clash = books.some(item => item.id !== book.id && bookKey(item) === bookKey(book));
-    if (clash) return `${book.title} by ${book.author} is already on your shelf.`;
+    if (clash) return `${shortTitle(book.title)} by ${book.author} is already on your shelf.`;
     if (book.id) onBooksChange(books.map(item => (item.id === book.id ? { ...item, ...book } : item)));
     else onBooksChange([...books, { ...book, id: newBookId(), source: editor.source }]);
     setEditor(null);

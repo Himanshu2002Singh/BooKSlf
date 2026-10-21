@@ -1,12 +1,16 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import BookCover from '../../components/BookCover.jsx';
 import Modal from '../../components/Modal.jsx';
+import { shortTitle, titleParts } from '../../lib/names.js';
 import '../../styles/reading-book.css';
 
+// The book popup is the one place that shows a book's full title: the main title with its
+// subtitle under it on the title page, and the title exactly as saved on the library card.
 function ReadingBook({ book, onClose }) {
   const [turned, setTurned] = useState(false);
   const [marked, setMarked] = useState(false);
   const titleId = `book-details-${String(book.id ?? 'selected').replace(/[^a-z\d_-]/gi, '-')}`;
+  const { main, subtitle } = titleParts(book.title);
   const hasRating = Number.isFinite(book.rating);
   const stars = hasRating ? Math.min(5, Math.max(0, Math.round(book.rating))) : 0;
 
@@ -32,7 +36,8 @@ function ReadingBook({ book, onClose }) {
               <p className="reading-page__eyebrow">THE TITLE PAGE</p>
               <div className="reading-title-block">
                 <span className="reading-flourish" aria-hidden="true">❧</span>
-                <p className="reading-title">{book.title}</p>
+                <p className="reading-title">{main}</p>
+                {subtitle && <p className="reading-subtitle">{subtitle}</p>}
                 <span className="reading-byline">by</span>
                 <p className="reading-author">{book.author || 'Unknown author'}</p>
                 {book.year && <p className="reading-year">First published {book.year}</p>}
@@ -126,15 +131,15 @@ function BookOpening({ book, origin, onOpened, onDone, onCancel }) {
 
   return (
     <div ref={overlayRef} className="bo" role="presentation" onClick={skip}>
-      <p className="sr-only" role="status">Opening {book.title}</p>
+      <p className="sr-only" role="status">Opening {shortTitle(book.title)}</p>
       <div ref={bookRef} className="bo-book" aria-hidden="true" style={{ '--t': `${thickness}px`, '--cloth': cloth || book.spineBg || book.color || '#6f4935', '--ink': ink || book.spineText || '#fff8e9' }}>
         <div className="bo-back" />
         <div className="bo-edge" />
-        <div className="bo-spine"><span>{book.title}</span></div>
+        <div className="bo-spine"><span>{shortTitle(book.title)}</span></div>
         <div className="bo-page">
           <span className="bo-page__eyebrow">EX LIBRIS</span>
           <span className="bo-page__flourish">❧</span>
-          <strong>{book.title}</strong>
+          <strong>{shortTitle(book.title)}</strong>
           <em>by {book.author || 'Unknown author'}</em>
         </div>
         <div ref={coverRef} className="bo-cover">
