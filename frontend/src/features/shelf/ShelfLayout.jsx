@@ -28,7 +28,7 @@ function ShareButton({ kind, label, href, onClick }) {
 // Shared shelf page: nav, hero with the share link, and the shelf itself.
 // shareUrl is null until the owner claims a username; linkEditor replaces the link box.
 export default function ShelfLayout({
-  books = [], theme, title, since, isDemo, shareUrl = window.location.href.split('#')[0], linkEditor, onEditLink, notice,
+  books = [], theme, title, since, isDemo, shareUrl = window.location.href.split('#')[0], linkEditor, onEditLink, notice, tools,
   onSignOut, onModify, onAddBook, onStart,
 }) {
   const [status, setStatus] = useState('');
@@ -98,6 +98,7 @@ export default function ShelfLayout({
           <ShareButton kind="whatsapp" label="WhatsApp" href={`https://wa.me/?text=${encodeURIComponent(`${title} ${shelfUrl}`)}`} />
         </div>}
         <p className="sp-status" role="status" aria-live="polite">{status || notice}</p>
+        {tools}
       </header>
 
       <main>

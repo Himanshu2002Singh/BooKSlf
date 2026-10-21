@@ -1,17 +1,49 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import usePageTitle from '../app/usePageTitle.js';
 import { themes } from '../data/themes.js';
+import { timeAgo } from '../lib/time.js';
+import ReviewDialog from '../features/reviews/ReviewDialog.jsx';
 import ShelfLayout from '../features/shelf/ShelfLayout.jsx';
 import UsernameClaim from '../features/shelf/UsernameClaim.jsx';
 import { shelfTitle } from '../lib/names.js';
 
+const REVIEW_DELAY = 1200; // Let the new shelf show for a moment before asking.
+
 // /shelf — the reader's own shelf. Its public address is /<username> once claimed.
 export default function ShelfPage({ app }) {
-  const { user } = app;
+  const { user, askForReview } = app;
   const [editingLink, setEditingLink] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
   const title = shelfTitle(user?.name);
   const publicUrl = user?.username ? `${window.location.origin}/${user.username}` : null;
   usePageTitle(title);
+
+  // Right after "Continue Creating Shelf", ask once for a review.
+  useEffect(() => {
+    if (!askForReview) return undefined;
+    const timer = window.setTimeout(() => setReviewOpen(true), REVIEW_DELAY);
+    return () => window.clearTimeout(timer);
+  }, [askForReview]);
+
+  function closeReview() {
+    setReviewOpen(false);
+    if (askForReview) app.reviewAsked();
+  }
+
+  async function syncNow() {
+    setSyncing(true);
+    setSyncMessage('');
+    try {
+      const { added } = await app.syncGoodreads();
+      if (!added.length) setSyncMessage('You’re up to date. Nothing new on Goodreads since the last sync.');
+    } catch (error) {
+      setSyncMessage(error.message);
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   const linkEditor = (!publicUrl || editingLink) ? (
     <UsernameClaim
@@ -24,19 +56,34 @@ export default function ShelfPage({ app }) {
     />
   ) : null;
 
+  const tools = (
+    <div className="sp-tools">
+      {app.goodreads && (
+        <span>
+          Goodreads synced {timeAgo(app.goodreads.syncedAt)} · <button type="button" onClick={syncNow} disabled={syncing}>{syncing ? 'Syncing…' : 'Sync now'}</button>
+        </span>
+      )}
+      <button type="button" onClick={() => setReviewOpen(true)}>{app.review ? 'Edit your review' : '★ Leave a review'}</button>
+    </div>
+  );
+
   return (
-    <ShelfLayout
-      books={app.books}
-      theme={app.isUnlocked(app.theme) ? app.theme : themes[0]}
-      title={title}
-      since={user?.since ?? new Date().getFullYear()}
-      shareUrl={publicUrl}
-      linkEditor={linkEditor}
-      onEditLink={() => setEditingLink(true)}
-      notice={app.saveError}
-      onSignOut={app.signOut}
-      onModify={() => app.navigate('/themes')}
-      onAddBook={() => app.navigate('/books')}
-    />
+    <>
+      <ShelfLayout
+        books={app.books}
+        theme={app.isUnlocked(app.theme) ? app.theme : themes[0]}
+        title={title}
+        since={user?.since ?? new Date().getFullYear()}
+        shareUrl={publicUrl}
+        linkEditor={linkEditor}
+        onEditLink={() => setEditingLink(true)}
+        notice={app.saveError || syncMessage || app.goodreadsNotice}
+        tools={tools}
+        onSignOut={app.signOut}
+        onModify={() => app.navigate('/themes')}
+        onAddBook={() => app.navigate('/books')}
+      />
+      {reviewOpen && <ReviewDialog review={app.review} onSave={app.saveReview} onClose={closeReview} />}
+    </>
   );
 }

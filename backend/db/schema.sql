@@ -52,3 +52,12 @@ CREATE TABLE IF NOT EXISTS goodreads_links (
   synced_at     DATETIME    NOT NULL,   -- last time Goodreads was read
   CONSTRAINT goodreads_links_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+-- One review per reader, asked for once their shelf is made. Sending again replaces it.
+CREATE TABLE IF NOT EXISTS reviews (
+  user_id    CHAR(36)      NOT NULL PRIMARY KEY,
+  rating     TINYINT       NOT NULL,           -- 1 to 5 stars
+  body       VARCHAR(1000) NOT NULL DEFAULT '',
+  updated_at TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT reviews_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);

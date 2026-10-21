@@ -1,6 +1,5 @@
 // /api/auth/* — email + password accounts, Google sign-in, sign-out and password reset.
 import * as PasswordReset from '../models/passwordReset.model.js';
-import * as Shelf from '../models/shelf.model.js';
 import * as User from '../models/user.model.js';
 import { verifyGoogleAccessToken } from '../services/google.service.js';
 import { sendPasswordReset } from '../services/mail.service.js';
@@ -9,7 +8,7 @@ import { hashPassword, verifyPassword } from '../utils/password.js';
 import { endSession, startSession } from '../utils/session.js';
 import { cleanEmail } from '../validators/email.validator.js';
 import { passwordProblem } from '../validators/password.validator.js';
-import { accountView } from '../views/user.view.js';
+import { accountOf } from './me.controller.js';
 
 const GOOGLE_ONLY = 'This email signs in with Google. Use “Continue with Google”.';
 
@@ -26,7 +25,7 @@ function nameFromEmail(email) {
 
 async function signIn(request, response, user) {
   startSession(request, response, user);
-  response.json(accountView(user, await Shelf.get(user.id)));
+  response.json(await accountOf(user));
 }
 
 export async function signup(request, response) {

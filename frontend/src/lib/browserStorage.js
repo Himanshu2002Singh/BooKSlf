@@ -29,3 +29,20 @@ export function clearDraft() {
     window.localStorage.removeItem(DRAFT_KEY);
   } catch { /* Nothing to clear when storage is blocked. */ }
 }
+
+// Whether this browser has already shown a reader the "review us" prompt (it comes once).
+const reviewAskedKey = userId => `bookshelf.cv.review-asked.${userId}`;
+
+export function wasReviewAsked(userId) {
+  try {
+    return window.localStorage.getItem(reviewAskedKey(userId)) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function markReviewAsked(userId) {
+  try {
+    window.localStorage.setItem(reviewAskedKey(userId), '1');
+  } catch { /* Blocked storage only means the prompt may come again. */ }
+}
