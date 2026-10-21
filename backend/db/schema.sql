@@ -43,3 +43,12 @@ CREATE TABLE IF NOT EXISTS orders (
   updated_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT orders_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+-- The Goodreads profile a reader imported, so new books on it can sync in later.
+CREATE TABLE IF NOT EXISTS goodreads_links (
+  user_id       CHAR(36)    NOT NULL PRIMARY KEY,
+  goodreads_id  VARCHAR(12) NOT NULL,   -- Goodreads' numeric user id
+  seen_book_ids JSON        NOT NULL,   -- Goodreads books already offered once, so a book the reader removes stays removed
+  synced_at     DATETIME    NOT NULL,   -- last time Goodreads was read
+  CONSTRAINT goodreads_links_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);

@@ -88,21 +88,31 @@ async function fetchShelf(userId, shelf) {
   return books;
 }
 
-// Returns { userId, profileUrl, counts, books } with books de-duplicated across shelves.
-export async function importGoodreads(profile) {
-  const userId = await resolveUserId(profile);
+export function profileUrl(userId) {
+  return `${ORIGIN}/user/show/${userId}`;
+}
+
+// Every book on a Goodreads user's Read and Currently Reading shelves, de-duplicated across them.
+export async function readShelves(userId) {
   const shelves = await Promise.all(SHELVES.map(shelf => fetchShelf(userId, shelf)));
   const seen = new Set();
-  const books = shelves.flat().filter(book => {
+  return shelves.flat().filter(book => {
     const key = book.goodreadsId || `${book.title}|${book.author}`.toLowerCase();
     if (!book.title || !book.author || seen.has(key)) return false;
     seen.add(key);
     return true;
   });
-  return {
-    userId,
-    profileUrl: `${ORIGIN}/user/show/${userId}`,
-    counts: Object.fromEntries(SHELVES.map((shelf, index) => [shelf, shelves[index].length])),
-    books,
-  };
+}
+
+// Goodreads books as shelf books (see validators/shelf.validator.js).
+export function toShelfBooks(books) {
+  return books.map(book => ({
+    id: `gr-${book.goodreadsId}`,
+    title: book.title,
+    author: book.author,
+    cover: book.cover,
+    source: 'goodreads',
+    ...(book.rating ? { rating: book.rating } : {}),
+    ...(book.year ? { year: book.year } : {}),
+  }));
 }

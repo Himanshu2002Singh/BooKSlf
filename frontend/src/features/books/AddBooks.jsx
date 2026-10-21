@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import BookEditor from './BookEditor.jsx';
-import { bookKey } from './bookKey.js';
+import { bookKey, mergeBooks } from './bookKey.js';
 import GoodreadsPanel from './panels/GoodreadsPanel.jsx';
 import LibraryPanel from './panels/LibraryPanel.jsx';
 import PhotoPanel from './panels/PhotoPanel.jsx';
@@ -18,21 +18,16 @@ function newBookId() {
 
 // "Add your books" step: pick a source (Goodreads, photo, library), then edit or add
 // books by hand. Every panel stays mounted, so switching tabs never loses a running import.
-export default function AddBooks({ books = [], onBooksChange, onContinue }) {
+export default function AddBooks({ books = [], goodreads, onConnectGoodreads, onSyncGoodreads, onBooksChange, onContinue }) {
   const fromSource = source => books.filter(book => (source === 'library' ? !book.source || book.source === 'library' : book.source === source));
   // Coming back to this page (Back, refresh, "Add book") shows what is already on the shelf.
   const [mode, setMode] = useState(() => (fromSource('goodreads').length ? 'goodreads' : fromSource('photo').length ? 'photo' : books.length ? 'library' : 'goodreads'));
   const [editor, setEditor] = useState(null);
 
   // Imports finish after a wait, so they merge into the shelf as it is by then: books picked
-  // or removed in another tab meanwhile are kept. A book already there under the same title
-  // and author, or the same id (a scanned book can match one picked from the library), is skipped.
+  // or removed in another tab meanwhile are kept.
   function importBooks(source, picks) {
-    onBooksChange(current => {
-      const keys = new Set(current.flatMap(book => [bookKey(book), book.id]));
-      const added = picks.filter(book => !keys.has(bookKey(book)) && !keys.has(book.id)).map(book => ({ ...book, source }));
-      return [...current, ...added];
-    });
+    onBooksChange(current => mergeBooks(current, picks, source));
   }
 
   function toggleLibraryBook(book) {
@@ -79,7 +74,9 @@ export default function AddBooks({ books = [], onBooksChange, onContinue }) {
       <GoodreadsPanel
         hidden={mode !== 'goodreads'}
         books={fromSource('goodreads')}
-        onImport={picks => importBooks('goodreads', picks)}
+        link={goodreads}
+        onConnect={onConnectGoodreads}
+        onSync={onSyncGoodreads}
         onEdit={editBook}
         onAddManually={addManually('goodreads')}
       />

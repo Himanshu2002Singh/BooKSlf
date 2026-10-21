@@ -8,7 +8,14 @@ export default function BooksPage({ app }) {
   usePageTitle('Add your books');
   return (
     <FlowShell navRight={<AuthNavLink app={app} />}>
-      <AddBooks books={app.books} onBooksChange={app.setBooks} onContinue={() => app.navigate('/shelf')} />
+      <AddBooks
+        books={app.books}
+        goodreads={app.goodreads}
+        onConnectGoodreads={app.connectGoodreads}
+        onSyncGoodreads={app.syncGoodreads}
+        onBooksChange={app.setBooks}
+        onContinue={app.finishBooks}
+      />
     </FlowShell>
   );
 }
