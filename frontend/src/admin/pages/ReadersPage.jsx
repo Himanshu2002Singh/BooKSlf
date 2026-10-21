@@ -36,7 +36,7 @@ export default function ReadersPage({ admin }) {
         <label className="ap-search">
           <Icon name="search" />
           <span className="sr-only">Search readers</span>
-          <input type="search" placeholder="Search by name, email or username" value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} />
+          <input type="search" placeholder="Name, email or username" value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} />
         </label>
         {data && <span className="ap-toolbar__note">{searching ? `${count(data.total)} found` : plural(data.total, 'reader')}</span>}
       </div>

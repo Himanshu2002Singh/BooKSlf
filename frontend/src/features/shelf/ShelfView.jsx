@@ -33,6 +33,37 @@ function chunk(items, size) {
   return rows;
 }
 
+// How many books fit on one shelf at the shelf's current width, up to `max`, so every row of
+// books gets its own plank instead of wrapping above it. Book and gap sizes change at container
+// breakpoints in the CSS, so they are read from the first row rather than repeated here.
+// `bookSelector` must name an element whose width never animates, or a resize mid-transition
+// would count books at the wrong width.
+function useShelfCapacity(max, rowSelector, bookSelector) {
+  const ref = useRef(null);
+  const [capacity, setCapacity] = useState(max);
+
+  useLayoutEffect(() => {
+    const shelves = ref.current;
+    if (!shelves) return undefined;
+    const update = () => {
+      const row = shelves.querySelector(rowSelector);
+      const book = row?.querySelector(bookSelector);
+      if (!book) return;
+      const rowStyle = getComputedStyle(row);
+      const gap = parseFloat(rowStyle.columnGap) || 0;
+      const width = row.clientWidth - parseFloat(rowStyle.paddingLeft) - parseFloat(rowStyle.paddingRight);
+      const fits = Math.floor((width + gap) / (parseFloat(getComputedStyle(book).width) + gap));
+      if (!Number.isNaN(fits)) setCapacity(Math.min(max, Math.max(1, fits)));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(shelves);
+    return () => observer.disconnect();
+  }, [max, rowSelector, bookSelector]);
+
+  return [ref, capacity];
+}
+
 function bookLabel(book) {
   return `Open ${book.title}${book.author ? ` by ${book.author}` : ''}`;
 }
@@ -67,13 +98,14 @@ function GridView({ books, onBookSelect }) {
 }
 
 function DigitalShelfView({ books, onBookSelect }) {
+  const [shelvesRef, perShelf] = useShelfCapacity(5, '.sv-plank-row__books', '.sv-dbook');
   return (
-    <div className="sv-planks">
-      {chunk(books, 5).map((row, rowIndex) => (
+    <div ref={shelvesRef} className="sv-planks" style={{ '--per-shelf': perShelf }}>
+      {chunk(books, perShelf).map((row, rowIndex) => (
         <div key={rowIndex} className="sv-plank-row">
           <div className="sv-plank-row__books">
             {row.map((book, index) => (
-              <button key={book.id ?? index} type="button" className="sv-dbook" style={{ '--i': rowIndex * 5 + index }} aria-label={bookLabel(book)} onClick={selectBook(onBookSelect, book)}>
+              <button key={book.id ?? index} type="button" className="sv-dbook" style={{ '--i': rowIndex * perShelf + index }} aria-label={bookLabel(book)} onClick={selectBook(onBookSelect, book)}>
                 <BookCover book={book} className="sv-dbook__cover" />
               </button>
             ))}
@@ -86,14 +118,17 @@ function DigitalShelfView({ books, onBookSelect }) {
 }
 
 function SpineView({ books, onBookSelect }) {
+  // A spine animates wider while it opens, so measure its face, which keeps the resting width.
+  const [shelvesRef, perShelf] = useShelfCapacity(12, '.sv-spine-row__books', '.sv-spine__face');
   return (
-    <div className="sv-spines">
-      {chunk(books, 12).map((row, rowIndex) => (
+    <div ref={shelvesRef} className="sv-spines">
+      {chunk(books, perShelf).map((row, rowIndex) => (
         <div key={rowIndex} className="sv-spine-row">
           <div className="sv-spine-row__books">
             {row.map((book, index) => {
+              const position = rowIndex * perShelf + index;
               const seed = hash(String(book.id ?? book.title));
-              const [background, color] = SPINE_COLORS[(rowIndex * 12 + index + seed) % SPINE_COLORS.length];
+              const [background, color] = SPINE_COLORS[(position + seed) % SPINE_COLORS.length];
               const title = book.title ?? '';
               const { height, wrap } = spineSize(title, seed);
               return (
@@ -105,7 +140,7 @@ function SpineView({ books, onBookSelect }) {
                   aria-label={bookLabel(book)}
                   title={[book.title, book.author].filter(Boolean).join(' — ')}
                   onClick={selectBook(onBookSelect, book)}
-                  style={{ height, color, '--cloth': background, '--cover-w': `${Math.round(height * .68)}px`, '--i': rowIndex * 12 + index }}
+                  style={{ height, color, '--cloth': background, '--cover-w': `${Math.round(height * .68)}px`, '--i': position }}
                 >
                   <span className="sv-spine__face" aria-hidden="true">
                     <i className="sv-spine__band" />

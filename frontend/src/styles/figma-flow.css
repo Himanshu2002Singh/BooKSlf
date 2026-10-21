@@ -270,6 +270,12 @@
   .fg-list-head { flex-wrap: wrap; }
   .fg-book-grid { grid-template-columns: 1fr; }
   .fg-cta { white-space: normal; }
+  /* The three sources become one row of compact tabs so the chosen panel sits right below them. */
+  .fg-methods { margin-top: 24px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .fg-method { align-items: center; padding: 12px 6px; text-align: center; }
+  .fg-method[aria-pressed='true'] { border-left-width: 1px; border-bottom-width: 4px; padding-left: 6px; }
+  .fg-method__title { margin-top: 4px; font-size: 14px; line-height: 18px; }
+  .fg-method__sub, .fg-method__link { display: none; }
 }
 
 @media (max-width: 460px) {
