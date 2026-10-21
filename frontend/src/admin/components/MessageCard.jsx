@@ -25,31 +25,31 @@ export default function MessageCard({ message, onCopy, onDelete }) {
   }
 
   return (
-    <li className="ad-card ad-message">
-      <span className="ad-message__icon" data-kind={message.kind}><Icon name={kind.icon} /></span>
-      <div className="ad-message__body">
-        <div className="ad-message__meta">
-          <span className="ad-chip" data-tone={kind.tone}>{kind.label}</span>
+    <li className="ap-card ap-message">
+      <span className="ap-message__icon" data-kind={message.kind}><Icon name={kind.icon} /></span>
+      <div className="ap-message__body">
+        <div className="ap-message__meta">
+          <span className="ap-chip" data-tone={kind.tone}>{kind.label}</span>
           <time dateTime={message.sentAt} title={moment(message.sentAt)}>{timeAgo(message.sentAt)}</time>
         </div>
-        <p className="ad-message__text">{message.text}</p>
-        <div className="ad-message__actions">
-          {reply && <a className="ad-btn ad-btn--small ad-btn--primary" href={reply}><Icon name="reply" size={15} />Reply</a>}
-          {message.email && <span className="ad-message__email">{message.email}</span>}
+        <p className="ap-message__text">{message.text}</p>
+        <div className="ap-message__actions">
+          {reply && <a className="ap-btn ap-btn--small ap-btn--primary" href={reply}><Icon name="reply" size={15} />Reply</a>}
+          {message.email && <span className="ap-message__email">{message.email}</span>}
           {copyText && (
-            <button type="button" className="ad-btn ad-btn--small ad-btn--quiet" onClick={() => onCopy(copyText)} aria-label={`Copy ${copyText}`}>
+            <button type="button" className="ap-btn ap-btn--small ap-btn--quiet" onClick={() => onCopy(copyText)} aria-label={`Copy ${copyText}`}>
               <Icon name="copy" size={15} />Copy
             </button>
           )}
-          <span className="ad-spacer" />
+          <span className="ap-spacer" />
           {confirming ? (
-            <span className="ad-confirm">
+            <span className="ap-confirm">
               Delete this message?
-              <button type="button" className="ad-btn ad-btn--small ad-btn--danger" onClick={remove} disabled={deleting}>{deleting ? 'Deleting…' : 'Delete'}</button>
-              <button type="button" className="ad-btn ad-btn--small ad-btn--quiet" onClick={() => setConfirming(false)} disabled={deleting}>Keep</button>
+              <button type="button" className="ap-btn ap-btn--small ap-btn--danger" onClick={remove} disabled={deleting}>{deleting ? 'Deleting…' : 'Delete'}</button>
+              <button type="button" className="ap-btn ap-btn--small ap-btn--quiet" onClick={() => setConfirming(false)} disabled={deleting}>Keep</button>
             </span>
           ) : (
-            <button type="button" className="ad-btn ad-btn--small ad-btn--ghost" onClick={() => setConfirming(true)}><Icon name="trash" size={15} />Delete</button>
+            <button type="button" className="ap-btn ap-btn--small ap-btn--ghost" onClick={() => setConfirming(true)}><Icon name="trash" size={15} />Delete</button>
           )}
         </div>
       </div>

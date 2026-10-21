@@ -48,21 +48,21 @@ export default function MessagesPage({ admin }) {
   const shown = all.filter(message => kind === 'all' || message.kind === kind);
 
   return (
-    <div className="ad-stack">
-      <div className="ad-segmented" role="group" aria-label="Show">
+    <div className="ap-stack">
+      <div className="ap-segmented" role="group" aria-label="Show">
         {FILTERS.map(([id, label]) => (
           <button key={id} type="button" aria-pressed={kind === id} onClick={() => setKind(id)}>
-            {label}<span className="ad-segmented__count">{count(totals[id])}</span>
+            {label}<span className="ap-segmented__count">{count(totals[id])}</span>
           </button>
         ))}
       </div>
-      {error && <p className="ad-alert" role="alert"><Icon name="alert" />{error}</p>}
-      {!messages ? <div className="ad-card"><Skeleton rows={3} height={64} /></div> : shown.length ? (
-        <ul className="ad-messages">
+      {error && <p className="ap-alert" role="alert"><Icon name="alert" />{error}</p>}
+      {!messages ? <div className="ap-card"><Skeleton rows={3} height={64} /></div> : shown.length ? (
+        <ul className="ap-messages">
           {shown.map(message => <MessageCard key={message.id} message={message} onCopy={copy} onDelete={remove} />)}
         </ul>
       ) : (
-        <div className="ad-card">
+        <div className="ap-card">
           <EmptyState icon="inbox" title={kind === 'all' ? 'No messages yet' : 'Nothing here yet'}>
             The home page’s question box and “new themes” box send their messages here.
           </EmptyState>

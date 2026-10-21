@@ -28,7 +28,7 @@ export default function AdminApp({ app }) {
     else if (signedIn && !page) navigate('/admin', { replace: true });
   }, [checking, signedIn, pathname, page, navigate]);
 
-  if (checking) return <div className="ad-boot" role="status"><span className="ad-spinner" aria-hidden="true" />Opening the admin panel…</div>;
+  if (checking) return <div className="ap-boot" role="status"><span className="ap-spinner" aria-hidden="true" />Opening the admin panel…</div>;
   if (!signedIn) return <LoginPage message={admin.error} onSignIn={admin.signIn} />;
   if (!page) return null; // On its way to /admin.
 
