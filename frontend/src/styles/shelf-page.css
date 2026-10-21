@@ -86,3 +86,8 @@
 .sp-claim__status[data-state='ok'] { color: #15803d; }
 .sp-claim__status[data-state='bad'] { color: #b91c1c; }
 .sp-link__edit { color: #6f655b !important; }
+
+/* Owner-only links under the share buttons: Goodreads sync and the review */
+.sp-tools { position: relative; margin-top: 4px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 20px; font: 500 13px/20px 'Inter', sans-serif; color: #6f655b; }
+.sp-tools button { padding: 0; border: 0; background: none; font: inherit; color: #7d3c1c; text-decoration: underline; }
+.sp-tools button:disabled { opacity: .6; text-decoration: none; }

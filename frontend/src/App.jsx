@@ -1,3 +1,5 @@
+import AdminApp from './admin/AdminApp.jsx';
+import { isAdminPath } from './admin/routes.js';
 import useBookshelf from './app/useBookshelf.js';
 import AuthPage from './pages/AuthPage.jsx';
 import BooksPage from './pages/BooksPage.jsx';
@@ -33,6 +35,8 @@ const USERNAME_PATH = /^\/[a-z0-9-]{3,30}$/i;
 
 export default function App() {
   const app = useBookshelf();
+  // /admin/* is its own little app with its own sign-in, so it doesn't wait for the reader's session.
+  if (isAdminPath(app.pathname)) return <AdminApp app={app} />;
   if (!app.ready) return null;
   const Page = pages[app.pathname] ?? (USERNAME_PATH.test(app.pathname) ? PublicShelfPage : NotFoundPage);
   return <Page app={app} />;

@@ -1,0 +1,32 @@
+/* The "review us" dialog shown once a shelf is made (features/reviews/ReviewDialog.jsx). */
+.rv-dialog {
+  --fg-brand: #e13a00;
+  --fg-brown: #7d3c1c;
+  --fg-ink: #1c1209;
+  width: min(520px, 100%);
+  padding: 32px;
+  border-radius: 16px;
+  background: #fffdfa;
+  text-align: center;
+  color: var(--fg-ink);
+}
+.rv-dialog h2 { margin: 0; font: 700 26px/1.25 'Syne', sans-serif; }
+.rv-dialog > form > p, .rv-done p { margin: 8px 0 0; font: 400 15px/22px 'Inter', sans-serif; color: rgba(28, 18, 9, .6); }
+.rv-stars { margin: 20px 0 0; padding: 0; border: 0; display: flex; justify-content: center; gap: 6px; }
+.rv-stars label span[aria-hidden] { display: block; font-size: 40px; line-height: 1; color: #e5dccd; transition: transform .15s ease, color .15s ease; }
+.rv-stars label span[data-on='true'] { color: #f5a524; }
+.rv-stars label:hover span[aria-hidden] { transform: scale(1.12); }
+.rv-stars input:focus-visible + span { outline: 2px solid var(--fg-brand); outline-offset: 2px; border-radius: 6px; }
+.rv-word { min-height: 20px; margin: 6px 0 0; font: 600 14px/20px 'Inter', sans-serif; color: var(--fg-brown); }
+.rv-dialog .fg-panel__label { margin-top: 16px; text-align: left; }
+.rv-text { resize: vertical; min-height: 104px; box-shadow: none; background: #fff; }
+.rv-dialog .fg-field-error { text-align: left; }
+.rv-actions { margin-top: 20px; display: flex; gap: 12px; }
+.rv-actions > * { flex: 1; }
+.rv-actions .fg-cta { filter: none; }
+.rv-done .fg-cta { margin-top: 24px; filter: none; }
+@media (max-width: 480px) {
+  .rv-dialog { padding: 24px 20px; }
+  .rv-stars label span[aria-hidden] { font-size: 34px; }
+  .rv-actions { flex-direction: column-reverse; }
+}

@@ -1,6 +1,6 @@
 // The shelves table: one row per reader with their books, chosen look and bought looks.
 import { query } from '../db/pool.js';
-import { cleanShelf } from '../validators/shelf.validator.js';
+import { bookKey, cleanShelf } from '../validators/shelf.validator.js';
 
 // Runs inside the transaction that creates the reader (see user.model.js).
 export async function insertEmpty(connection, userId) {
@@ -22,6 +22,21 @@ export async function save(userId, shelf) {
     [clean.themeId, JSON.stringify(clean.purchasedThemeIds), JSON.stringify(clean.books), userId],
   );
   return clean;
+}
+
+// Adds the books that aren't on the shelf yet (no same id, nor same title and author) to its end,
+// and returns them.
+export async function addBooks(userId, books) {
+  const shelf = await get(userId);
+  const taken = new Set(shelf.books.flatMap(book => [book.id, bookKey(book)]));
+  const fresh = cleanShelf({ books }).books.filter(book => {
+    if (taken.has(book.id) || taken.has(bookKey(book))) return false;
+    taken.add(book.id).add(bookKey(book));
+    return true;
+  });
+  if (!fresh.length) return [];
+  const saved = await save(userId, { ...shelf, books: [...shelf.books, ...fresh] });
+  return saved.books.slice(shelf.books.length); // Fewer than `fresh` once the shelf is full.
 }
 
 export async function unlockTheme(userId, themeId) {

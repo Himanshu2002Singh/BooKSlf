@@ -282,3 +282,11 @@
 .fg-auth__note { margin: 0; padding: 16px; border: 2px solid #6dd18b; border-radius: 12px; background: #dcfce7; font: 400 15px/22px 'Inter', sans-serif; color: var(--fg-ink); }
 .fg-auth .acc a { font: 700 14px/20px 'Inter', sans-serif; color: #1f1f1f; text-decoration: underline; }
 .fg-auth .g:disabled, .fg-auth .fg-cta:disabled { opacity: .7; cursor: progress; }
+
+/* Goodreads panel once a profile is connected */
+.fg-panel > * + .fg-alert, .fg-panel > * + .fg-field-error { margin-top: 16px; }
+.fg-panel__desc a { color: var(--fg-brown); text-decoration: underline; }
+.fg-gr__actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; }
+.fg-gr__actions .fg-cta { width: auto; padding: 10px 28px; filter: none; }
+.fg-gr__actions .fg-outline { padding: 10px 24px; }
+.fg-link-button { margin-top: 12px; padding: 0; border: 0; background: none; font: 500 14px/20px 'Inter', sans-serif; color: var(--fg-brown); text-decoration: underline; }

@@ -3,18 +3,23 @@ import { before, mock, test } from 'node:test';
 import { scan } from '../controllers/books.controller.js';
 import { rateLimit } from '../middleware/rateLimit.middleware.js';
 import { MAX_BOOKS_PER_PHOTO, readShelfPhoto } from '../services/gemini.service.js';
-import { importGoodreads } from '../services/goodreads.service.js';
+import { readShelves, toShelfBooks } from '../services/goodreads.service.js';
 import { matchBooks, searchBooks, toBooks } from '../services/openLibrary.service.js';
+import { totalPaise } from '../services/payment.service.js';
+import { adminKey, matchesAdmin } from '../utils/admin.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
-import { readSession, startSession } from '../utils/session.js';
+import { hasAdminSession, readSession, startAdminSession, startSession } from '../utils/session.js';
+import { cleanMessage, cleanReview } from '../validators/feedback.validator.js';
 import { passwordProblem } from '../validators/password.validator.js';
 import { MAX_PHOTO_CHARS, cleanPhoto } from '../validators/photo.validator.js';
+import { cleanPrice } from '../validators/price.validator.js';
 import { MAX_BOOKS, cleanShelf } from '../validators/shelf.validator.js';
 import { suggestUsername, usernameProblem } from '../validators/username.validator.js';
 
 before(() => {
   process.env.SESSION_SECRET = 'test-secret-that-is-long-enough-for-hmac-signing';
   delete process.env.GEMINI_API_KEY; // Tests set a fake key; they never call the real Gemini API.
+  delete process.env.DATABASE_URL; // Unit tests never touch a database (an open pool would also keep the run alive).
 });
 
 test('passwords hash with a salt and only verify with the right password', async () => {
@@ -92,7 +97,7 @@ test('Goodreads: private shelves (401) and unknown ids (404) get clear errors', 
   for (const [status, expected] of [[401, { status: 403, message: /private/ }], [404, { status: 404, message: /couldn’t find/ }], [500, { status: 502, message: /didn’t respond/ }]]) {
     const fetchMock = mock.method(globalThis, 'fetch', async () => new Response('', { status }));
     const warn = mock.method(console, 'warn', () => {});
-    await assert.rejects(importGoodreads('12345'), expected);
+    await assert.rejects(readShelves('12345'), expected);
     fetchMock.mock.restore();
     warn.mock.restore();
   }
@@ -315,12 +320,11 @@ test('rate limit: each reader gets their own allowance, then 429 with Retry-Afte
   assert.throws(() => slow({ user: { id: 'reader-1' } }, response, next), { status: 429, message: /in 10 minutes/ });
 });
 
-test('payments: amount calculation includes 18% GST and rejects unknown themes', async () => {
-  const { calculateAmountPaise } = await import('../services/payment.service.js');
-  assert.equal(calculateAmountPaise('digital-shelf'), 88382);
-  assert.equal(calculateAmountPaise('spine-shelf'), 147382);
-  assert.equal(calculateAmountPaise('macos'), 206382);
-  assert.throws(() => calculateAmountPaise('free-theme'), { status: 400, message: /Unknown theme/ });
+test('payments: amounts include 18% GST, in paise', () => {
+  assert.equal(totalPaise(749), 88382);
+  assert.equal(totalPaise(1249), 147382);
+  assert.equal(totalPaise(1749), 206382);
+  assert.equal(totalPaise(1), 118);
 });
 
 test('payments: signature verification validates HMAC SHA256 and rejects tampering', async () => {
@@ -338,4 +342,68 @@ test('payments: signature verification validates HMAC SHA256 and rejects tamperi
   await assert.rejects(verifyPayment({ userId: 'u1', orderId, paymentId, signature: 'wrong_signature', themeId: 'macos' }), { status: 400, message: /Invalid payment signature/ });
 
   delete process.env.RAZORPAY_KEY_SECRET;
+});
+
+test('rate limit: a key can share one allowance between visitors', () => {
+  const limit = rateLimit({ limit: 1, windowMs: 60_000, key: () => 'everyone' });
+  const response = { set() {} };
+  limit({}, response, () => {});
+  assert.throws(() => limit({}, response, () => {}), { status: 429 });
+});
+
+test('Goodreads books become shelf books with a stable id and their source', () => {
+  assert.deepEqual(toShelfBooks([
+    { goodreadsId: '42', title: 'Dune', author: 'Frank Herbert', cover: 'https://x/d.jpg', rating: 5, year: 1965 },
+    { goodreadsId: '7', title: 'Emma', author: 'Jane Austen', cover: null, rating: null, year: null },
+  ]), [
+    { id: 'gr-42', title: 'Dune', author: 'Frank Herbert', cover: 'https://x/d.jpg', source: 'goodreads', rating: 5, year: 1965 },
+    { id: 'gr-7', title: 'Emma', author: 'Jane Austen', cover: null, source: 'goodreads' },
+  ]);
+});
+
+test('reviews need 1–5 whole stars; the text is optional and capped', () => {
+  assert.deepEqual(cleanReview({ rating: 5, text: '  Lovely  ' }), { rating: 5, body: 'Lovely' });
+  assert.deepEqual(cleanReview({ rating: 1 }), { rating: 1, body: '' });
+  for (const rating of [0, 6, 4.5, '5', undefined]) assert.throws(() => cleanReview({ rating }), { status: 400 });
+  assert.throws(() => cleanReview({ rating: 3, text: 'x'.repeat(1001) }), { status: 400, message: /under 1000/ });
+});
+
+test('landing messages: questions need an email, a signed-in reader’s is used, unknown forms are refused', () => {
+  assert.deepEqual(cleanMessage({ kind: 'updates', text: ' @reader ' }), { kind: 'updates', body: '@reader', email: null, userId: null });
+  assert.deepEqual(cleanMessage({ kind: 'question', text: 'Hi?', email: ' A@B.co ' }), { kind: 'question', body: 'Hi?', email: 'a@b.co', userId: null });
+  assert.deepEqual(cleanMessage({ kind: 'question', text: 'Hi?' }, { id: 'u1', email: 'me@x.io' }), { kind: 'question', body: 'Hi?', email: 'me@x.io', userId: 'u1' });
+  assert.throws(() => cleanMessage({ kind: 'question', text: 'Hi?' }), { status: 400, message: /email/ });
+  assert.throws(() => cleanMessage({ kind: 'question', text: 'Hi?', email: 'nope' }), { status: 400 });
+  assert.throws(() => cleanMessage({ kind: 'updates', text: '   ' }), { status: 400 });
+  assert.throws(() => cleanMessage({ kind: 'spam', text: 'x' }), { status: 400, message: /Unknown form/ });
+});
+
+test('look prices are whole rupees and dollars within range', () => {
+  assert.deepEqual(cleanPrice({ inr: 999, usd: 12 }), { inr: 999, usd: 12 });
+  for (const price of [{ inr: 0, usd: 9 }, { inr: 749.5, usd: 9 }, { inr: '749', usd: 9 }, { inr: 749, usd: 0 }, { inr: 100001, usd: 9 }, {}]) {
+    assert.throws(() => cleanPrice(price), { status: 400 });
+  }
+});
+
+test('admin: sign-in checks the environment credentials, and a password change ends old sessions', () => {
+  delete process.env.ADMIN_EMAIL;
+  assert.throws(() => matchesAdmin('a@b.co', 'whatever'), { status: 503 });
+  process.env.ADMIN_EMAIL = 'Admin@Example.com';
+  process.env.ADMIN_PASSWORD = 'short';
+  assert.throws(() => matchesAdmin('admin@example.com', 'short'), { status: 503 }, 'passwords under 12 characters are refused');
+  process.env.ADMIN_PASSWORD = 'a-long-admin-password';
+  assert.equal(matchesAdmin(' admin@example.com ', 'a-long-admin-password'), true);
+  assert.equal(matchesAdmin('admin@example.com', 'a-long-admin-passwor'), false);
+  assert.equal(matchesAdmin('someone@example.com', 'a-long-admin-password'), false);
+
+  let header = '';
+  startAdminSession({ secure: false }, { setHeader: (name, value) => { header = value; } }, adminKey());
+  assert.match(header, /Path=\/api\/admin; HttpOnly; SameSite=Strict/);
+  const request = { headers: { cookie: header.split(';')[0] } };
+  assert.equal(hasAdminSession(request, adminKey()), true);
+  assert.equal(hasAdminSession({ headers: { cookie: cookieFrom({ id: 'user-1', session_version: 0 }) } }, adminKey()), false, 'a reader session is not an admin session');
+  process.env.ADMIN_PASSWORD = 'a-new-long-admin-password';
+  assert.equal(hasAdminSession(request, adminKey()), false);
+  delete process.env.ADMIN_EMAIL;
+  delete process.env.ADMIN_PASSWORD;
 });

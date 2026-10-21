@@ -1,6 +1,7 @@
 import * as User from '../models/user.model.js';
+import { adminKey } from '../utils/admin.js';
 import { HttpError } from '../utils/HttpError.js';
-import { readSession } from '../utils/session.js';
+import { hasAdminSession, readSession } from '../utils/session.js';
 
 // The signed-in reader from the session cookie, or null. A session issued before a
 // password reset (older session_version) no longer counts.
@@ -21,5 +22,11 @@ export async function loadUser(request, response, next) {
 export async function requireUser(request, response, next) {
   request.user = await sessionUser(request);
   if (!request.user) throw new HttpError(401, 'Sign in to continue.');
+  next();
+}
+
+// The admin panel's routes answer 401 until the admin signs in (POST /api/admin/login).
+export function requireAdmin(request, response, next) {
+  if (!hasAdminSession(request, adminKey())) throw new HttpError(401, 'Sign in as the admin to continue.');
   next();
 }

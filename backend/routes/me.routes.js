@@ -8,5 +8,6 @@ const router = Router();
 router.get('/', loadUser, me.getAccount);
 router.put('/shelf', requireUser, me.saveShelf);
 router.put('/username', requireUser, me.claimUsername);
+router.put('/review', requireUser, me.saveReview);
 
 export default router;

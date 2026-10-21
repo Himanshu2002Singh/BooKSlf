@@ -8,6 +8,13 @@ function text(value, max = MAX_TEXT) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
+// Same title + author (ignoring case and spacing) means the same book, whatever its source.
+// The browser uses the same rule (frontend/src/features/books/bookKey.js).
+export function bookKey(book) {
+  const normalize = (value = '') => value.trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+  return `${normalize(book.title)}\u0000${normalize(book.author)}`;
+}
+
 function cleanBook(book) {
   if (!book || typeof book !== 'object'
     || !text(book.id, 80) || !text(book.title) || !text(book.author)
