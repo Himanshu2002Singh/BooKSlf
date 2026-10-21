@@ -30,3 +30,16 @@ CREATE TABLE IF NOT EXISTS password_resets (
   used_at    DATETIME NULL,
   CONSTRAINT password_resets_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS orders (
+  id           VARCHAR(64)  NOT NULL PRIMARY KEY,
+  user_id      CHAR(36)     NOT NULL,
+  theme_id     VARCHAR(40)  NOT NULL,
+  amount       INT          NOT NULL,
+  currency     VARCHAR(10)  NOT NULL DEFAULT 'INR',
+  status       VARCHAR(20)  NOT NULL DEFAULT 'created',
+  payment_id   VARCHAR(64)  NULL,
+  created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT orders_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
