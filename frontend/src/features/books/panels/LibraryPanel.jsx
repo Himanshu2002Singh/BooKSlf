@@ -75,7 +75,7 @@ export default function LibraryPanel({ hidden, books, shelf, onToggle, onRemove,
           onChange={event => { setQuery(event.target.value); setResultsOpen(true); }}
           onFocus={() => setResultsOpen(true)}
           onKeyDown={event => { if (event.key === 'Escape') setResultsOpen(false); }}
-          placeholder="Search books by title, author or keyword"
+          placeholder="Search by title or author"
           autoComplete="off"
           aria-controls="library-results"
           aria-expanded={open}

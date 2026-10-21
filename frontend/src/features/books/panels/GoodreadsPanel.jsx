@@ -55,7 +55,7 @@ export default function GoodreadsPanel({ hidden, books: imported, link, onConnec
               className="fg-input"
               value={profile}
               onChange={event => setProfile(event.target.value)}
-              placeholder="goodreads.com/yourname or your user ID"
+              placeholder="Goodreads profile link or ID"
               autoComplete="off"
               aria-describedby={result.tone === 'error' ? 'goodreads-result' : undefined}
             />

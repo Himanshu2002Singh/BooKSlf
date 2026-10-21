@@ -64,12 +64,19 @@
 }
 
 @media (max-width: 720px) {
-  .sp-page .fg-nav { flex-wrap: wrap; }
+  .sp-page .fg-nav { flex-wrap: wrap; row-gap: 12px; }
+  /* Brand and Sign Out share the top row; the shelf actions take the full second row. */
+  .sp-page .fg-nav > .fg-nav__side { flex: 1 1 100%; justify-content: space-between; gap: 10px; }
+  .sp-page .fg-nav > .fg-nav__side:last-child > .sp-btn { flex: 1; }
   .sp-btn { height: 36px; padding: 0 14px; font-size: 14px; }
   .sp-hero { padding-top: 36px; }
   .sp-title { font-size: 28px; line-height: 36px; }
   .sp-shares { gap: 10px; }
   .sp-share { height: 38px; padding: 0 14px; font-size: 14px; }
+  /* The shelf address gets its own line so the username is never cut off; Change and Copy link sit under it. */
+  .sp-hero > .sp-link { flex-wrap: wrap; height: auto; padding: 12px 16px; row-gap: 6px; }
+  .sp-hero > .sp-link span { flex-basis: calc(100% - 20px); white-space: normal; overflow-wrap: anywhere; }
+  .sp-hero > .sp-link span + button { margin-left: auto; }
 }
 
 /* Claim / change bookshelf.cv/<username> */
