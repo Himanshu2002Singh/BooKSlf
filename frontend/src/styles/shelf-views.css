@@ -117,6 +117,7 @@
 .sv-spine__title {
   flex: 1;
   min-height: 0;
+  max-width: 100%;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   overflow: hidden;

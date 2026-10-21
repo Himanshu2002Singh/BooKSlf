@@ -10,6 +10,17 @@ const SPINE_HEIGHTS = [224, 263, 176];
 const SPINE_MAX = 300;
 // Padding, the gilt bands and their gaps take this much of every spine.
 const SPINE_CHROME = 64;
+// Two lines on the tallest spine, with slack for where words break. A third line would not
+// fit across a spine.
+const SPINE_TITLE_MAX = 56;
+
+// A spine carries the main title, as printed books do: no subtitle after a colon and no
+// trailing "(Series, #1)". The full title stays in the tooltip and the book's details.
+function spineTitle(title) {
+  const main = title.replace(/\s*\([^)]*\)\s*$/, '').split(/:\s/)[0].trim() || title;
+  if (main.length <= SPINE_TITLE_MAX) return main;
+  return `${main.slice(0, SPINE_TITLE_MAX).replace(/\s+\S*$/, '')}…`;
+}
 
 // Bold 14px Inter runs up to about 7.8px per character; spines grow to fit the title and
 // wrap onto a second line only past SPINE_MAX.
@@ -129,7 +140,7 @@ function SpineView({ books, onBookSelect }) {
               const position = rowIndex * perShelf + index;
               const seed = hash(String(book.id ?? book.title));
               const [background, color] = SPINE_COLORS[(position + seed) % SPINE_COLORS.length];
-              const title = book.title ?? '';
+              const title = spineTitle(book.title ?? '');
               const { height, wrap } = spineSize(title, seed);
               return (
                 <button
