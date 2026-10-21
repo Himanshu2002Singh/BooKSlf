@@ -17,19 +17,19 @@ export default function ReviewsPage({ admin }) {
     return () => { live = false; };
   }, [request]);
 
-  if (error) return <p className="ad-alert" role="alert"><Icon name="alert" />{error}</p>;
-  if (!reviews) return <div className="ad-card"><Skeleton rows={4} height={72} /></div>;
+  if (error) return <p className="ap-alert" role="alert"><Icon name="alert" />{error}</p>;
+  if (!reviews) return <div className="ap-card"><Skeleton rows={4} height={72} /></div>;
   if (!reviews.length) {
     return (
-      <div className="ad-card">
+      <div className="ap-card">
         <EmptyState icon="star" title="No reviews yet">Readers are asked for a review once they finish making their shelf.</EmptyState>
       </div>
     );
   }
   return (
-    <div className="ad-reviews">
+    <div className="ap-reviews">
       <ReviewSummary reviews={reviews} />
-      <ul className="ad-review-list">
+      <ul className="ap-review-list">
         {reviews.map(review => <ReviewCard key={review.email} review={review} />)}
       </ul>
     </div>

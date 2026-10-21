@@ -31,21 +31,21 @@ export default function ReadersPage({ admin }) {
   const first = data ? (data.page - 1) * data.pageSize + 1 : 0;
 
   return (
-    <section className="ad-card ad-card--flush" aria-label="Readers" aria-busy={!data}>
-      <div className="ad-toolbar">
-        <label className="ad-search">
+    <section className="ap-card ap-card--flush" aria-label="Readers" aria-busy={!data}>
+      <div className="ap-toolbar">
+        <label className="ap-search">
           <Icon name="search" />
           <span className="sr-only">Search readers</span>
           <input type="search" placeholder="Search by name, email or username" value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} />
         </label>
-        {data && <span className="ad-toolbar__note">{searching ? `${count(data.total)} found` : plural(data.total, 'reader')}</span>}
+        {data && <span className="ap-toolbar__note">{searching ? `${count(data.total)} found` : plural(data.total, 'reader')}</span>}
       </div>
-      {error && <p className="ad-alert ad-alert--inset" role="alert"><Icon name="alert" />{error}</p>}
+      {error && <p className="ap-alert ap-alert--inset" role="alert"><Icon name="alert" />{error}</p>}
       {!data ? <Skeleton rows={6} height={52} /> : data.readers.length ? (
-        <div className="ad-table-wrap">
-          <table className="ad-table ad-readers">
+        <div className="ap-table-wrap">
+          <table className="ap-table ap-readers">
             <thead>
-              <tr>{COLUMNS.map(column => <th key={column} scope="col" className={column === 'Books' ? 'ad-num' : undefined}>{column}</th>)}</tr>
+              <tr>{COLUMNS.map(column => <th key={column} scope="col" className={column === 'Books' ? 'ap-num' : undefined}>{column}</th>)}</tr>
             </thead>
             <tbody>{data.readers.map(reader => <ReaderRow key={reader.id} reader={reader} />)}</tbody>
           </table>
@@ -56,11 +56,11 @@ export default function ReadersPage({ admin }) {
         </EmptyState>
       )}
       {data && data.total > data.pageSize && (
-        <footer className="ad-pager">
+        <footer className="ap-pager">
           <span>{count(first)}–{count(first + data.readers.length - 1)} of {count(data.total)}</span>
           <div>
-            <button type="button" className="ad-btn ad-btn--quiet" disabled={page <= 1} onClick={() => setPage(page - 1)}><Icon name="chevronLeft" size={16} />Newer</button>
-            <button type="button" className="ad-btn ad-btn--quiet" disabled={page >= pages} onClick={() => setPage(page + 1)}>Older<Icon name="chevronRight" size={16} /></button>
+            <button type="button" className="ap-btn ap-btn--quiet" disabled={page <= 1} onClick={() => setPage(page - 1)}><Icon name="chevronLeft" size={16} />Newer</button>
+            <button type="button" className="ap-btn ap-btn--quiet" disabled={page >= pages} onClick={() => setPage(page + 1)}>Older<Icon name="chevronRight" size={16} /></button>
           </div>
         </footer>
       )}

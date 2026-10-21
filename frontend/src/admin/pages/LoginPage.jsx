@@ -35,9 +35,9 @@ export default function LoginPage({ message = '', onSignIn }) {
 
   return (
     <FlowShell navRight={<a className="fg-nav-link" href="/">Back to the site</a>}>
-      <form className="fg-auth ad-signin" onSubmit={submit} noValidate aria-busy={busy}>
+      <form className="fg-auth ap-signin" onSubmit={submit} noValidate aria-busy={busy}>
         <div className="fg-head">
-          <span className="ad-signin__badge"><Icon name="lock" size={13} />Admin</span>
+          <span className="ap-signin__badge"><Icon name="lock" size={13} />Admin</span>
           <h1>Welcome back</h1>
           <p>Sign in to look after readers, prices, messages and reviews.</p>
         </div>
@@ -48,7 +48,7 @@ export default function LoginPage({ message = '', onSignIn }) {
           </div>
           <div>
             <label className="lbl" htmlFor="admin-password">Password</label>
-            <div className="ad-password">
+            <div className="ap-password">
               <input id="admin-password" className="fg-input" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={form.password} onChange={update('password')} aria-describedby={error ? 'admin-error' : undefined} />
               <button type="button" onClick={() => setShowPassword(shown => !shown)} aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword}>
                 <Icon name={showPassword ? 'eyeOff' : 'eye'} />

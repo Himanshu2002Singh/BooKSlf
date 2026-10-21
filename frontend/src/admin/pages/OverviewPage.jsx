@@ -32,20 +32,20 @@ export default function OverviewPage({ admin }) {
   const shelves = themes.reduce((sum, theme) => sum + (usage[theme.id]?.readers ?? 0), 0);
 
   return (
-    <div className="ad-overview">
-      <section className="ad-kpis" aria-label="Totals">
+    <div className="ap-overview">
+      <section className="ap-kpis" aria-label="Totals">
         {totals.map(total => (
-          <article key={total.label} className="ad-kpi">
-            <span className="ad-kpi__icon"><Icon name={total.icon} /></span>
-            <h2 className="ad-kpi__label">{total.label}</h2>
-            <p className="ad-kpi__value">{total.value}</p>
-            <p className="ad-kpi__note">{total.note}</p>
+          <article key={total.label} className="ap-kpi">
+            <span className="ap-kpi__icon"><Icon name={total.icon} /></span>
+            <h2 className="ap-kpi__label">{total.label}</h2>
+            <p className="ap-kpi__value">{total.value}</p>
+            <p className="ap-kpi__note">{total.note}</p>
           </article>
         ))}
       </section>
 
-      <section className="ad-card ad-usage" aria-labelledby="usage-title">
-        <header className="ad-card__head">
+      <section className="ap-card ap-usage" aria-labelledby="usage-title">
+        <header className="ap-card__head">
           <h2 id="usage-title">Looks in use</h2>
           <a href="/admin/prices">Edit prices</a>
         </header>
@@ -56,25 +56,25 @@ export default function OverviewPage({ admin }) {
             const price = prices[theme.id];
             return (
               <li key={theme.id}>
-                <span className="ad-usage__name">{theme.name}<small>{price ? `${rupees.format(price.inr)} · $${price.usd} badge` : 'Free'}</small></span>
-                <span className="ad-bar" aria-hidden="true"><i style={{ width: `${readers ? Math.max(share, 2) : 0}%` }} /></span>
-                <span className="ad-usage__count">{plural(readers, 'shelf', 'shelves')}<small>{share}%</small></span>
+                <span className="ap-usage__name">{theme.name}<small>{price ? `${rupees.format(price.inr)} · $${price.usd} badge` : 'Free'}</small></span>
+                <span className="ap-bar" aria-hidden="true"><i style={{ width: `${readers ? Math.max(share, 2) : 0}%` }} /></span>
+                <span className="ap-usage__count">{plural(readers, 'shelf', 'shelves')}<small>{share}%</small></span>
               </li>
             );
           })}
         </ul>
       </section>
 
-      <section className="ad-card" aria-labelledby="inbox-title">
-        <header className="ad-card__head">
+      <section className="ap-card" aria-labelledby="inbox-title">
+        <header className="ap-card__head">
           <h2 id="inbox-title">Newest messages</h2>
           <a href="/admin/messages">All messages</a>
         </header>
         {!latest ? <Skeleton rows={3} height={44} /> : latest.messages.length ? (
-          <ul className="ad-mini">
+          <ul className="ap-mini">
             {latest.messages.map(message => (
               <li key={message.id}>
-                <span className="ad-mini__icon" data-kind={message.kind}><Icon name={message.kind === 'question' ? 'help' : 'bell'} size={16} /></span>
+                <span className="ap-mini__icon" data-kind={message.kind}><Icon name={message.kind === 'question' ? 'help' : 'bell'} size={16} /></span>
                 <div>
                   <p>{message.text}</p>
                   <small>{message.email ?? 'No email'} · {timeAgo(message.sentAt)}</small>
@@ -85,13 +85,13 @@ export default function OverviewPage({ admin }) {
         ) : <EmptyState icon="inbox" title="No messages yet">Questions and theme sign-ups from the home page land here.</EmptyState>}
       </section>
 
-      <section className="ad-card" aria-labelledby="reviews-title">
-        <header className="ad-card__head">
+      <section className="ap-card" aria-labelledby="reviews-title">
+        <header className="ap-card__head">
           <h2 id="reviews-title">Newest reviews</h2>
           <a href="/admin/reviews">All reviews</a>
         </header>
         {!latest ? <Skeleton rows={3} height={44} /> : latest.reviews.length ? (
-          <ul className="ad-mini">
+          <ul className="ap-mini">
             {latest.reviews.map(review => (
               <li key={review.email}>
                 <Avatar name={review.name} email={review.email} picture={review.picture} size={32} />
