@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import BookCover from '../../components/BookCover.jsx';
+import { shortTitle } from '../../lib/names.js';
 import '../../styles/shelf-views.css';
 
 const SPINE_COLORS = [
@@ -14,10 +15,9 @@ const SPINE_CHROME = 64;
 // fit across a spine.
 const SPINE_TITLE_MAX = 56;
 
-// A spine carries the main title, as printed books do: no subtitle after a colon and no
-// trailing "(Series, #1)". The full title stays in the tooltip and the book's details.
+// The main title, cut after a whole word if it would still need a third line.
 function spineTitle(title) {
-  const main = title.replace(/\s*\([^)]*\)\s*$/, '').split(/:\s/)[0].trim() || title;
+  const main = shortTitle(title);
   if (main.length <= SPINE_TITLE_MAX) return main;
   return `${main.slice(0, SPINE_TITLE_MAX).replace(/\s+\S*$/, '')}…`;
 }
@@ -76,7 +76,7 @@ function useShelfCapacity(max, rowSelector, bookSelector) {
 }
 
 function bookLabel(book) {
-  return `Open ${book.title}${book.author ? ` by ${book.author}` : ''}`;
+  return `Open ${shortTitle(book.title)}${book.author ? ` by ${book.author}` : ''}`;
 }
 
 // Where the book sits on screen, so the reading view can lift it off the shelf.
@@ -149,7 +149,7 @@ function SpineView({ books, onBookSelect }) {
                   className="sv-spine"
                   data-wrap={wrap || undefined}
                   aria-label={bookLabel(book)}
-                  title={[book.title, book.author].filter(Boolean).join(' — ')}
+                  title={[shortTitle(book.title), book.author].filter(Boolean).join(' — ')}
                   onClick={selectBook(onBookSelect, book)}
                   style={{ height, color, '--cloth': background, '--cover-w': `${Math.round(height * .68)}px`, '--i': position }}
                 >
@@ -181,7 +181,7 @@ function MacView({ books, onBookSelect }) {
           <span className="sv-mac__book" style={{ '--book-edge': book.spineBg || book.color || '#555' }}>
             <BookCover book={book} interactive={false} showSpineShadow={false} className="sv-mac__cover" />
           </span>
-          <span className="sv-mac__caption">{book.title}</span>
+          <span className="sv-mac__caption">{shortTitle(book.title)}</span>
         </button>
       ))}
     </div>

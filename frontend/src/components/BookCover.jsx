@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { shortTitle } from '../lib/names.js';
 import '../styles/book-cover.css';
 
 const fallbackGradients = [
@@ -94,6 +95,7 @@ export default function BookCover({
   };
 
   const imageUrl = coverUrl && !imgError ? coverUrl : null;
+  const title = shortTitle(book.title);
   const fallbackBackground = typeof coverValue === 'string' && /^#[\da-f]{3,8}$/i.test(coverValue)
     ? coverValue
     : book.color || fallbackGradients[0];
@@ -109,7 +111,7 @@ export default function BookCover({
         ...restStyle,
         '--book-shadow': boxShadow,
       }}
-      aria-label={`${book.title || 'Book'} by ${book.author || 'Author'}`}
+      aria-label={`${title || 'Book'} by ${book.author || 'Author'}`}
       {...props}
     >
       <div className="book-cover__object">
@@ -120,7 +122,7 @@ export default function BookCover({
             {imageUrl ? (
               <img
                 src={imageUrl}
-                alt={book.title || 'Book cover'}
+                alt={title || 'Book cover'}
                 onError={() => setImgError(true)}
                 className="h-full w-full object-cover"
                 loading={loading}
@@ -136,7 +138,7 @@ export default function BookCover({
                       Bookshelf
                     </span>
                     <h4 className="mt-1 font-serif text-sm font-bold leading-snug line-clamp-3">
-                      {book.title || 'Untitled'}
+                      {title || 'Untitled'}
                     </h4>
                   </div>
                   <p className="text-[11px] font-medium text-white/80 line-clamp-1 pb-1">
