@@ -72,6 +72,9 @@
   .form input { flex: 1; min-width: 0; height: 53px; padding: 16px; border: 1px solid #1f1f1f; border-radius: 16px; background: #fff; font: 400 16px 'Inter', sans-serif; color: #1c1209; outline: none; }
   .form input::placeholder { color: rgba(28,18,9,.5); }
   .form button { padding: 17px 41px; border-radius: 16px; background: #fff; border: 1px solid #e13a00; color: #e13a00; font: 700 16px/normal 'Syne', sans-serif; cursor: pointer; }
+  .form button:disabled { opacity: .6; }
+  .form input.email { flex: 0 1 300px; }
+  .form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
   .why { padding: 120px 0; display: flex; flex-direction: column; align-items: center; gap: 40px; }
   .wb { position: relative; width: 449.439px; height: 587px; }

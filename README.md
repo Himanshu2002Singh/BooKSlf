@@ -49,6 +49,8 @@ never commit them. Only the `.env.example` files are committed.
 | `backend/.env` | `GOOGLE_CLIENT_ID` | Google OAuth **client ID** (see below) |
 | `backend/.env` | `APP_ORIGIN` | Site address used in password-reset links |
 | `backend/.env` | `GEMINI_API_KEY` | Google AI Studio API key that reads shelf photos |
+| `backend/.env` | `ADMIN_EMAIL` | Email the admin signs in to `/admin` with |
+| `backend/.env` | `ADMIN_PASSWORD` | The admin's password (12+ characters). Changing it signs the admin out everywhere |
 | `frontend/.env` | `VITE_GOOGLE_CLIENT_ID` | The same Google client ID |
 | `frontend/.env` | `VITE_RAZORPAY_KEY_ID` | Razorpay test key id (`rzp_test_…`) |
 
@@ -83,9 +85,33 @@ Vite builds those into the public JavaScript.
 - The flow follows the Figma file: landing → sign up → choose a look → checkout (for
   premium looks) → add books → your shelf.
 - There are six shelf looks. Light, Gradient and Dark Grid are free. Digital Shelf,
-  Spine Shelf and MacOS are premium (₹749 / ₹1,249 / ₹1,749 + 18% GST).
+  Spine Shelf and MacOS are premium (₹749 / ₹1,249 / ₹1,749 + 18% GST by default). The
+  admin sets each premium look's rupee price and its dollar card badge; checkout orders,
+  the theme cards and the terms page all use the `theme_prices` table
+  (`GET /api/themes/prices`).
 - The Goodreads import is real: the backend reads the reader's public "Read" and
-  "Currently Reading" shelves.
+  "Currently Reading" shelves (`PUT /api/goodreads`) and keeps the profile linked. New
+  books on it sync in on their own each time the app opens or its tab comes back into view
+  (`POST /api/goodreads/sync`; Goodreads is read at most every 10 minutes), and "Sync now"
+  on the Goodreads panel and the shelf page reads it straight away. The server remembers
+  every Goodreads book it has offered, so a book the reader removes from their shelf stays
+  removed. A large profile takes a while: Goodreads serves 100 books per request (about
+  40 seconds for 640 books).
+- Once the reader clicks "Continue Creating Shelf", the shelf page asks once (per browser)
+  for a 1–5 star review with optional words (`PUT /api/me/review`). "Leave a review" under
+  the share buttons opens it again; each reader has one review, which they can edit.
+- The landing page's two forms reach the admin panel through `POST /api/messages`: the
+  roadmap form takes an email or social handle for news of new looks, and the contact form
+  takes a question and the email to answer it. A hidden field drops bot posts, and
+  everyone shares 30 messages a minute.
+- The admin panel is for one admin, who signs in with `ADMIN_EMAIL` and `ADMIN_PASSWORD`
+  (a separate, HttpOnly cookie for 12 hours; 10 sign-in attempts per 15 minutes). Its
+  pages: `/admin` (totals, looks in use, newest messages and reviews), `/admin/readers`
+  (search; account, the look their shelf shows, looks bought, books, Goodreads link,
+  review), `/admin/prices` (each look with a live preview and its usage; premium prices
+  with the GST total), `/admin/messages` (reply, copy or delete) and `/admin/reviews`
+  (average, spread and every review). Signed out, any of them goes to `/admin/login`,
+  which comes back to the page you asked for.
 - Shelf photos are read by Gemini (`gemini-3.5-flash-lite`, minimal thinking) through
   `POST /api/books/scan`. The browser first shrinks the photo to about 2 megapixels and
   under ~730 KB of JPEG; a pixel budget rather than a longest edge keeps panoramas readable.
@@ -108,7 +134,7 @@ Vite builds those into the public JavaScript.
   server answers.
 - Routes: `/`, `/signup`, `/login`, `/forgot`, `/reset?token=…`, `/themes`,
   `/purchase?theme=<id>`, `/books`, `/shelf`, `/demo?theme=<id>`, `/privacy`, `/terms`,
-  `/refunds`, and `/<username>` for public shelves. Direct links and refreshes work on
+  `/refunds`, the `/admin/…` pages, and `/<username>` for public shelves. Direct links and refreshes work on
   all of them.
 
 ## Razorpay (test mode)
@@ -136,9 +162,11 @@ Both apps deploy to Vercel from this repo on every push to `main`:
   to the frontend's domain and the session cookie stays first-party. Every other path
   goes to the app, so deep links work.
 - The database must be reachable from Vercel: use a cloud MySQL such as TiDB Cloud, and
-  append `?ssl={"rejectUnauthorized":true}` to `DATABASE_URL`. To create the tables, put
-  that URL in `backend/.env.production` (git ignores it) and run
-  `node --env-file=.env.production db/setup.js` from `backend/`.
+  append `?ssl={"rejectUnauthorized":true}` to `DATABASE_URL`. The API creates any missing
+  tables itself the first time it touches the database after a start or deploy, so new
+  tables need no manual step. For a brand-new database, put that URL in
+  `backend/.env.production` (git ignores it) and run
+  `node --env-file=.env.production db/setup.js` from `backend/`, which also creates the database.
 - Add the frontend's domain to the Google client's Authorized JavaScript origins.
 
 ## Structure
@@ -149,20 +177,26 @@ Both apps deploy to Vercel from this repo on every push to `main`:
 - `app.js`: the Express app: JSON body parsing, the JSON-only guard, routes and the
   error handler.
 - `routes/`: maps URLs to controllers, one file per resource (`auth`, `me`,
-  `usernames`, `shelves`, `goodreads`, `books`). `index.js` mounts them all under `/api`.
+  `usernames`, `shelves`, `goodreads`, `books`, `payments`, `themes`, `messages`, `admin`).
+  `index.js` mounts them all under `/api`.
 - `controllers/`: request handlers. They read the request, call models and services,
   and answer with a view.
-- `models/`: all SQL, one file per table (`user`, `shelf`, `passwordReset`).
-- `views/`: the JSON shapes sent to the browser (`user.view.js`, `shelf.view.js`). Raw
-  database rows never leave the server.
-- `middleware/`: `auth` (loads the signed-in reader, guards private routes), `jsonOnly`
-  (no-store + JSON-only writes), `rateLimit` (per-reader request limits) and `error`
-  (404 and error responses).
-- `services/`: outside systems: Google token checks, the Goodreads import, Open Library
-  book search and matching, Gemini shelf-photo reading, and email.
-- `validators/`: input rules for email, password, shelf data, usernames and shelf photos.
-- `utils/`: `HttpError`, password hashing and session cookies.
-- `db/`: `schema.sql`, the connection pool and the `db:setup` script.
+- `models/`: all SQL, one file per table (`user`, `shelf`, `passwordReset`, `order`,
+  `goodreadsLink`, `review`, `themePrice`, `message`), plus `admin` for the admin panel's
+  reports across tables.
+- `views/`: the JSON shapes sent to the browser (`user.view.js`, `shelf.view.js`,
+  `admin.view.js`). Raw database rows never leave the server.
+- `middleware/`: `auth` (loads the signed-in reader, guards private and admin routes),
+  `jsonOnly` (no-store + JSON-only writes), `rateLimit` (request limits per reader, or per
+  shared key) and `error` (404 and error responses).
+- `services/`: outside systems: Google token checks, Goodreads shelves, Open Library
+  book search and matching, Gemini shelf-photo reading, Razorpay payments, and email.
+- `validators/`: input rules for email, password, shelf data, usernames, shelf photos,
+  reviews and landing messages, and look prices.
+- `utils/`: `HttpError`, password hashing, session cookies (reader and admin) and the admin
+  sign-in check.
+- `db/`: `schema.js` (every table, safe to re-run), the connection pool (which creates any
+  missing tables before its first query) and the `db:setup` script.
 - `test/`: API tests (`api.test.js`) and unit tests (`unit.test.js`).
 
 ### `frontend/src/`
@@ -170,7 +204,8 @@ Both apps deploy to Vercel from this repo on every push to `main`:
 - `main.jsx`: React entry point.
 - `App.jsx`: the route table. It maps each URL to its page and does nothing else.
 - `app/`: app-wide state and navigation.
-  - `useBookshelf.js`: the signed-in reader, their shelf, and the steps between pages.
+  - `useBookshelf.js`: the signed-in reader, their shelf, review and Goodreads sync, the
+    look prices, and the steps between pages.
   - `useBrowserRouter.js`: History API navigation for plain `<a href>` links.
   - `useRouteScroll.js`: scroll-to-top, `#section` landing and heading focus on page change.
   - `usePageTitle.js`: a browser-tab title for each page.
@@ -185,6 +220,13 @@ Both apps deploy to Vercel from this repo on every push to `main`:
   - `books/`: the "Add your books" step. `AddBooks.jsx` holds the shared shelf edits,
     `panels/` has one panel per source (Goodreads, photo, library), and `BookEditor.jsx`
     handles manual entry.
+  - `reviews/`: the "review us" dialog.
+- `admin/`: the admin panel, a small app of its own under `/admin`. `AdminApp.jsx` checks
+  the admin session and picks the page, `routes.js` lists the pages (path, sidebar label,
+  title), `useAdmin.js` holds the session, totals and toasts, `pages/` has one file per
+  page (overview, readers, prices, messages, reviews, sign-in), and `components/` the
+  layout and the pieces they share (cards, rows, avatar, stars, icons). Its styles are in
+  `styles/admin.css`.
   - `checkout/`: the checkout page and the Razorpay loader (test mode).
   - `legal/`: copy for the privacy policy, terms and refund & cancellation policy
     (no refunds, returns or cancellations), and the support email they show.

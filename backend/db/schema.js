@@ -1,5 +1,7 @@
--- Bookshelf.cv accounts and shelves. Safe to run repeatedly (npm run db:setup).
-
+// Every table, as SQL that is safe to run again and again. The API runs it once per process,
+// just before its first query (db/pool.js), so a deploy that adds tables needs no manual step.
+// `npm run db:setup` runs it by hand and also creates the database itself.
+export const SCHEMA = `
 CREATE TABLE IF NOT EXISTS users (
   id              CHAR(36)     NOT NULL PRIMARY KEY,
   email           VARCHAR(254) NOT NULL UNIQUE,
@@ -61,3 +63,24 @@ CREATE TABLE IF NOT EXISTS reviews (
   updated_at TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT reviews_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+-- Prices of the premium looks, set in the admin panel. Free looks have no row.
+CREATE TABLE IF NOT EXISTS theme_prices (
+  theme_id   VARCHAR(40) NOT NULL PRIMARY KEY,
+  inr        INT         NOT NULL,   -- charged at checkout, before 18% GST
+  usd        INT         NOT NULL,   -- shown on the theme card's badge
+  updated_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+INSERT IGNORE INTO theme_prices (theme_id, inr, usd) VALUES ('digital-shelf', 749, 9), ('spine-shelf', 1249, 15), ('macos', 1749, 21);
+
+-- The landing page's two forms: an email or handle for news of new themes, or a question.
+CREATE TABLE IF NOT EXISTS messages (
+  id         BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  kind       VARCHAR(20)   NOT NULL,   -- 'updates' or 'question'
+  body       VARCHAR(1000) NOT NULL,
+  email      VARCHAR(254)  NULL,
+  user_id    CHAR(36)      NULL,       -- the signed-in reader who sent it, if any
+  created_at TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT messages_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
+);
+`;

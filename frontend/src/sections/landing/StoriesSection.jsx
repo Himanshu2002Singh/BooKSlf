@@ -3,7 +3,7 @@ import { art, faqCards } from './content.jsx';
 import Reviews from './Reviews.jsx';
 
 // "We are an open book!": FAQ cards, the question form and reader reviews (#stories, #contact).
-export default function StoriesSection({ onStart }) {
+export default function StoriesSection({ onStart, email }) {
   return (
     <section className="open" id="stories">
       <div className="pic"><img src={art('open-book-bg.jpg')} alt="" /></div>
@@ -19,7 +19,7 @@ export default function StoriesSection({ onStart }) {
         </div>
         <div className="panel" id="contact" data-reveal>
           <div className="t">If you have a question, do share it. You will get an answer within 24 hours. No AI replies.</div>
-          <CaptureForm label="Your question" placeholder="Share your questions." emptyMessage="Type your question first." />
+          <CaptureForm kind="question" askEmail defaultEmail={email} label="Your question" placeholder="Share your questions." emptyMessage="Type your question first." />
         </div>
       </div>
       <Reviews />

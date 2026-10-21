@@ -1,7 +1,8 @@
-// Creates the database named in DATABASE_URL (if missing) and its tables.
+// Creates the database named in DATABASE_URL (if missing) and its tables. The API also creates
+// missing tables on its own (db/pool.js); this is for a brand-new database or a manual check.
 // Usage: npm run db:setup   (reads backend/.env)
-import { readFile } from 'node:fs/promises';
 import mysql from 'mysql2/promise';
+import { SCHEMA } from './schema.js';
 
 const url = process.env.DATABASE_URL;
 if (!url) {
@@ -20,7 +21,7 @@ target.pathname = '/';
 const server = await mysql.createConnection({ uri: target.toString(), multipleStatements: true });
 await server.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
 await server.query(`USE \`${database}\``);
-await server.query(await readFile(new URL('./schema.sql', import.meta.url), 'utf8'));
+await server.query(SCHEMA);
 const [tables] = await server.query('SHOW TABLES');
 console.log(`Database "${database}" ready with tables: ${tables.map(row => Object.values(row)[0]).join(', ')}`);
 await server.end();

@@ -3,12 +3,20 @@ import { themePrice, themes } from '../../data/themes.js';
 // Copy for the legal pages. Premium looks are one-time digital purchases with no
 // refunds, returns or cancellations; keep the three documents consistent on that.
 export const CONTACT_EMAIL = 'support@bookfolio.live';
-export const LAST_UPDATED = '17 October 2026';
+export const LAST_UPDATED = '21 October 2026';
 
 const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;
 const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
 const freeLooks = themes.filter(theme => !theme.paid).map(theme => theme.name).join(', ');
-const premiumLooks = themes.filter(theme => theme.paid);
+
+// A component, so it lists the prices set in the admin panel (they load after this file does).
+function PremiumPrices() {
+  return (
+    <ul>
+      {themes.filter(theme => theme.paid).map(theme => <li key={theme.id}>{theme.name}: {inr.format(theme.inr)} + 18% GST ({inr.format(themePrice(theme).total)} in total)</li>)}
+    </ul>
+  );
+}
 
 const privacy = {
   title: 'Privacy Policy',
@@ -18,7 +26,9 @@ const privacy = {
       <ul>
         <li><strong>Account details.</strong> Your name and email address. If you sign up with a password, we store only a scrypt hash of it, never the password itself. If you continue with Google, Google shares your name, email address, profile picture and Google account ID with us.</li>
         <li><strong>Your shelf.</strong> The books you add, the look you choose, the looks you have bought and the username you claim.</li>
-        <li><strong>Goodreads imports.</strong> The Goodreads profile link or ID you enter. We read only that profile’s public “Read” and “Currently Reading” shelves.</li>
+        <li><strong>Goodreads profile.</strong> The Goodreads profile link or ID you enter. We read only that profile’s public “Read” and “Currently Reading” shelves, and we keep the profile so books you add there later can sync to your shelf.</li>
+        <li><strong>Reviews.</strong> The star rating and words you send when you review Bookfolio.</li>
+        <li><strong>Messages.</strong> What you send from our home page: an email address or social handle to hear about new looks, or a question with the email address we should answer.</li>
         <li><strong>Shelf photos.</strong> A photo you upload is used only to recognise the books in it. We do not keep it on our servers.</li>
         <li><strong>Checkout details.</strong> When you buy a premium look you enter your name, email, phone number (optional), billing address and, for businesses, your GSTIN. Your card, UPI or bank details are entered on Razorpay’s checkout and handled by Razorpay. We never see or store them.</li>
         <li><strong>Security records.</strong> Failed sign-in attempts, temporary account locks and password-reset tokens. Reset tokens are stored only as a hash and expire after 60 minutes.</li>
@@ -30,6 +40,7 @@ const privacy = {
         <li>To save your shelf and show it at bookfolio.live/&lt;username&gt;.</li>
         <li>To take payments, issue receipts and GST invoices, and unlock the looks you buy.</li>
         <li>To send service emails, such as password-reset links.</li>
+        <li>To answer your questions, and to tell you about new looks when you ask us to.</li>
         <li>To prevent fraud and abuse, and to meet our legal obligations.</li>
       </ul>
       <p>We do not sell your personal information, and we do not use it for advertising.</p>
@@ -66,9 +77,7 @@ const terms = {
     ['Acceptable use', <p>Don’t misuse the service: no hacking, probing or overloading our systems, no scraping or automated account creation, no reselling access, and nothing that breaks the law.</p>],
     ['Looks, prices and payment', <>
       <p>The {freeLooks} looks are free. These premium looks are one-time purchases:</p>
-      <ul>
-        {premiumLooks.map(theme => <li key={theme.id}>{theme.name}: {inr.format(theme.inr)} + 18% GST ({inr.format(themePrice(theme).total)} in total)</li>)}
-      </ul>
+      <PremiumPrices />
       <p>Prices are in Indian rupees and the amount you pay is shown at checkout. Payments are processed by Razorpay. A premium look unlocks on your account as soon as the payment succeeds, and you can use it for as long as your account and the service exist. Purchases are tied to your account and cannot be transferred. We may change prices for future purchases.</p>
       <p><strong>All purchases are final. There are no refunds, returns or cancellations</strong>, as explained in our <a href="/refunds">Refund &amp; Cancellation Policy</a>.</p>
     </>],

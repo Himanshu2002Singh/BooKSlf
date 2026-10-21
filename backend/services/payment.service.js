@@ -2,28 +2,27 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 import * as Order from '../models/order.model.js';
 import * as Shelf from '../models/shelf.model.js';
+import * as ThemePrice from '../models/themePrice.model.js';
 import { HttpError } from '../utils/HttpError.js';
-
-export const PAID_THEMES = {
-  'digital-shelf': { name: 'Digital Shelf', inr: 749 },
-  'spine-shelf': { name: 'Spine Shelf', inr: 1249 },
-  'macos': { name: 'MacOS', inr: 1749 },
-};
 
 export const GST_RATE = 0.18;
 
-// Calculates total amount in paise including 18% GST.
-export function calculateAmountPaise(themeId) {
-  const theme = PAID_THEMES[themeId];
-  if (!theme) throw new HttpError(400, `Unknown theme “${themeId}”.`);
-  const subtotal = theme.inr;
-  const gst = Math.round(subtotal * GST_RATE * 100) / 100;
-  return Math.round((subtotal + gst) * 100);
+// A price in rupees plus 18% GST, in paise.
+export function totalPaise(inr) {
+  const gst = Math.round(inr * GST_RATE * 100) / 100;
+  return Math.round((inr + gst) * 100);
+}
+
+// Calculates total amount in paise including 18% GST, from the price set in the admin panel.
+export async function calculateAmountPaise(themeId) {
+  const price = await ThemePrice.find(themeId);
+  if (!price) throw new HttpError(400, `Unknown theme “${themeId}”.`);
+  return totalPaise(price.inr);
 }
 
 // Calls Razorpay Orders API (https://api.razorpay.com/v1/orders) to create a verified order.
 export async function createOrder({ userId, themeId }) {
-  const amountPaise = calculateAmountPaise(themeId);
+  const amountPaise = await calculateAmountPaise(themeId);
   const keyId = (process.env.RAZORPAY_KEY_ID || '').trim();
   const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
 
@@ -114,6 +113,13 @@ export async function verifyPayment({ userId, orderId, paymentId, signature, the
       await Order.markFailed(orderId).catch(() => {});
       throw new HttpError(400, 'Invalid payment signature. If you were debited, please contact support.');
     }
+  }
+
+  // The look unlocked is the one this reader's order was priced for, so paying for a cheaper
+  // look can't unlock a dearer one.
+  const order = await Order.findById(orderId);
+  if (!order || order.user_id !== userId || order.theme_id !== themeId) {
+    throw new HttpError(400, 'This payment doesn’t match your order. If you were debited, please contact support.');
   }
 
   // Update order status in database.

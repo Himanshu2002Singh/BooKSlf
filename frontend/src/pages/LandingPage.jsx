@@ -26,7 +26,7 @@ export default function LandingPage({ app }) {
         <StepsSection />
         <ThemesSection />
         <WhySection />
-        <StoriesSection onStart={app.startSetup} />
+        <StoriesSection onStart={app.startSetup} email={app.user?.email} />
         <CtaSection onStart={app.startSetup} />
       </main>
       <LandingFooter />
