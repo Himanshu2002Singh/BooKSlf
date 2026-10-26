@@ -40,7 +40,7 @@ export default function ReviewDialog({ review, onSave, onClose }) {
       ) : (
         <form onSubmit={submit} noValidate>
           <h2 id="review-title">{review ? 'Edit your review' : 'Your shelf is ready! How did we do?'}</h2>
-          <p>Rate Bookshelf.cv and tell us what you think.</p>
+          <p>Rate Bookshelf.cv and tell us what you think. We may show your words on our home page, with your name and photo.</p>
           <fieldset className="rv-stars">
             <legend className="sr-only">Your rating</legend>
             {WORDS.map((word, index) => (

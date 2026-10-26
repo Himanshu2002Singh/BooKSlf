@@ -201,6 +201,7 @@
 .ap-review time { margin-left: auto; font-size: 13px; white-space: nowrap; color: var(--ap-muted); }
 .ap-review blockquote { margin: 0; padding-left: 14px; border-left: 3px solid var(--ap-line); font: italic 400 16px/1.6 'Lora', Georgia, serif; color: var(--ap-ink-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
 .ap-review__none { margin: 0; font-size: 14px; color: var(--ap-muted); }
+.ap-review__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
 
 /* Empty lists, loading, toasts */
 .ap-empty { display: grid; justify-items: center; gap: 6px; padding: 36px 20px; text-align: center; }

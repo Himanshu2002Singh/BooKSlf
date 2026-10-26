@@ -85,6 +85,7 @@ describe('without a database', () => {
       const login = await call('/admin/login', { method: 'POST', body: { email: ADMIN.ADMIN_EMAIL, password: ADMIN.ADMIN_PASSWORD } });
       assert.equal(login.status, 200);
       assert.match(login.cookie, /^bs_admin=/);
+      assert.equal((await call('/admin/reviews/someone', { method: 'PUT', body: { featured: true } })).status, 401);
     });
     await withEnv({ ADMIN_PASSWORD: undefined }, async () => {
       assert.equal((await call('/admin/overview')).status, 503);
@@ -217,6 +218,32 @@ describe('with database', { skip: !process.env.DATABASE_URL && 'DATABASE_URL not
     assert.equal(shelf.body.shelf.books[0].title, 'Dune');
     assert.equal(shelf.body.owner.email, undefined);
     assert.equal((await call('/shelves/nobody-lives-here-xyz')).status, 404);
+  });
+
+  test('admin: a review picked for the home page shows there until the reader changes it', async () => {
+    await withEnv(ADMIN, async () => {
+      const admin = (await call('/admin/login', { method: 'POST', body: { email: ADMIN.ADMIN_EMAIL, password: ADMIN.ADMIN_PASSWORD } })).cookie;
+      const { id, featured } = (await call('/admin/reviews', { cookie: admin })).body.reviews.find(review => review.email === email);
+      const onHomePage = async () => (await call('/reviews')).body.reviews.filter(review => review.username === username);
+      const pick = (body, as = admin) => call(`/admin/reviews/${id}`, { method: 'PUT', cookie: as, body });
+      assert.equal(featured, false);
+      assert.deepEqual(await onHomePage(), []);
+
+      assert.equal((await pick({ featured: true }, cookie)).status, 401, 'a reader session is not enough');
+      assert.equal((await pick({ featured: 'yes' })).status, 400);
+      assert.equal((await pick({ featured: true })).status, 200);
+      assert.deepEqual(await onHomePage(), [{ name: 'Test Reader', picture: null, username, themeId: 'macos', text: 'Lovely shelves' }]);
+      assert.equal((await call('/admin/reviews', { cookie: admin })).body.reviews.find(review => review.id === id).featured, true);
+
+      await call('/me/review', { method: 'PUT', cookie, body: { rating: 5, text: 'Lovely shelves' } });
+      assert.equal((await onHomePage()).length, 1, 'sending the same review again keeps it picked');
+      await call('/me/review', { method: 'PUT', cookie, body: { rating: 5, text: 'Changed my mind' } });
+      assert.deepEqual(await onHomePage(), [], 'changed words wait to be picked again');
+
+      await call('/me/review', { method: 'PUT', cookie, body: { rating: 4 } });
+      assert.equal((await pick({ featured: true })).status, 400, 'stars alone have no words to show');
+      assert.equal((await call('/admin/reviews/nobody', { method: 'PUT', cookie: admin, body: { featured: true } })).status, 404);
+    });
   });
 
   test('login checks the password and locks after repeated failures', async () => {

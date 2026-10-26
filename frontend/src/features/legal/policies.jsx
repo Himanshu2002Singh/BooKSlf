@@ -3,7 +3,7 @@ import { themePrice, themes } from '../../data/themes.js';
 // Copy for the legal pages. Premium looks are one-time digital purchases with no
 // refunds, returns or cancellations; keep the three documents consistent on that.
 export const CONTACT_EMAIL = 'support@bookfolio.live';
-export const LAST_UPDATED = '21 October 2026';
+export const LAST_UPDATED = '26 October 2026';
 
 const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;
 const inr = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
@@ -27,7 +27,7 @@ const privacy = {
         <li><strong>Account details.</strong> Your name and email address. If you sign up with a password, we store only a scrypt hash of it, never the password itself. If you continue with Google, Google shares your name, email address, profile picture and Google account ID with us.</li>
         <li><strong>Your shelf.</strong> The books you add, the look you choose, the looks you have bought and the username you claim.</li>
         <li><strong>Goodreads profile.</strong> The Goodreads profile link or ID you enter. We read only that profile’s public “Read” and “Currently Reading” shelves, and we keep the profile so books you add there later can sync to your shelf.</li>
-        <li><strong>Reviews.</strong> The star rating and words you send when you review Bookfolio.</li>
+        <li><strong>Reviews.</strong> The star rating and words you send when you review Bookfolio. We may show your words on our home page.</li>
         <li><strong>Messages.</strong> What you send from our home page: an email address or social handle to hear about new looks, or a question with the email address we should answer.</li>
         <li><strong>Shelf photos.</strong> A photo you upload is used only to recognise the books in it. We do not keep it on our servers.</li>
         <li><strong>Checkout details.</strong> When you buy a premium look you enter your name, email, phone number (optional), billing address and, for businesses, your GSTIN. Your card, UPI or bank details are entered on Razorpay’s checkout and handled by Razorpay. We never see or store them.</li>
@@ -45,7 +45,7 @@ const privacy = {
       </ul>
       <p>We do not sell your personal information, and we do not use it for advertising.</p>
     </>],
-    ['What other people can see', <p>Once you claim a username, anyone with the link bookfolio.live/&lt;username&gt; can see your name, profile picture, the year you joined, your books and your chosen look. Your email address is never shown.</p>],
+    ['What other people can see', <p>Once you claim a username, anyone with the link bookfolio.live/&lt;username&gt; can see your name, profile picture, the year you joined, your books and your chosen look. If we show your review on our home page, anyone can see its words with your name, profile picture and chosen look, and a link to your shelf once you have a username. Your email address is never shown.</p>],
     ['Cookies and browser storage', <p>We use one essential cookie: a signed, HttpOnly session cookie that keeps you signed in. We also keep a copy of your shelf in your browser’s local storage so pages load quickly. We do not use advertising or tracking cookies. Google sign-in and Razorpay checkout load their own scripts, which may set cookies under their own policies.</p>],
     ['Who we share it with', <>
       <ul>

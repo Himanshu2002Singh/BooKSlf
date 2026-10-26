@@ -1,4 +1,5 @@
-// /api/admin/* — the admin panel: sign-in, readers and their looks, look prices, landing messages and reviews.
+// /api/admin/* — the admin panel: sign-in, readers and their looks, look prices, landing messages, and
+// reviews and which of them the home page shows.
 import * as Admin from '../models/admin.model.js';
 import * as Message from '../models/message.model.js';
 import * as Review from '../models/review.model.js';
@@ -53,4 +54,12 @@ export async function deleteMessage(request, response) {
 
 export async function reviews(request, response) {
   response.json({ reviews: (await Review.list()).map(reviewRowView) });
+}
+
+// PUT /api/admin/reviews/:id { featured } — shows the reader's review on the home page, or takes it off.
+export async function featureReview(request, response) {
+  const { featured } = request.body ?? {};
+  if (typeof featured !== 'boolean') throw new HttpError(400, 'Send featured: true or false.');
+  await Review.setFeatured(request.params.id, featured);
+  response.json({ ok: true });
 }

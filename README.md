@@ -100,6 +100,11 @@ Vite builds those into the public JavaScript.
 - Once the reader clicks "Continue Creating Shelf", the shelf page asks once (per browser)
   for a 1–5 star review with optional words (`PUT /api/me/review`). "Leave a review" under
   the share buttons opens it again; each reader has one review, which they can edit.
+- The landing page's "What book readers are saying" rows show the reviews the admin picks
+  on `/admin/reviews` (`GET /api/reviews`: the newest 20 picks, with the reader's name,
+  photo, look and a link to their shelf, never their email). A reader who edits a picked
+  review drops off until it is picked again, and a sample quote fills the rows until
+  anything is picked.
 - The landing page's two forms reach the admin panel through `POST /api/messages`: the
   roadmap form takes an email or social handle for news of new looks, and the contact form
   takes a question and the email to answer it. A hidden field drops bot posts, and
@@ -110,8 +115,8 @@ Vite builds those into the public JavaScript.
   (search; account, the look their shelf shows, looks bought, books, Goodreads link,
   review), `/admin/prices` (each look with a live preview and its usage; premium prices
   with the GST total), `/admin/messages` (reply, copy or delete) and `/admin/reviews`
-  (average, spread and every review). Signed out, any of them goes to `/admin/login`,
-  which comes back to the page you asked for.
+  (average, spread and every review, each with "Show on home page"). Signed out, any of
+  them goes to `/admin/login`, which comes back to the page you asked for.
 - Shelf photos are read by Gemini (`gemini-3.5-flash-lite`, minimal thinking) through
   `POST /api/books/scan`. The browser first shrinks the photo to about 2 megapixels and
   under ~730 KB of JPEG; a pixel budget rather than a longest edge keeps panoramas readable.
@@ -177,7 +182,8 @@ Both apps deploy to Vercel from this repo on every push to `main`:
 - `app.js`: the Express app: JSON body parsing, the JSON-only guard, routes and the
   error handler.
 - `routes/`: maps URLs to controllers, one file per resource (`auth`, `me`,
-  `usernames`, `shelves`, `goodreads`, `books`, `payments`, `themes`, `messages`, `admin`).
+  `usernames`, `shelves`, `goodreads`, `books`, `payments`, `themes`, `messages`, `reviews`,
+  `admin`).
   `index.js` mounts them all under `/api`.
 - `controllers/`: request handlers. They read the request, call models and services,
   and answer with a view.
@@ -185,7 +191,7 @@ Both apps deploy to Vercel from this repo on every push to `main`:
   `goodreadsLink`, `review`, `themePrice`, `message`), plus `admin` for the admin panel's
   reports across tables.
 - `views/`: the JSON shapes sent to the browser (`user.view.js`, `shelf.view.js`,
-  `admin.view.js`). Raw database rows never leave the server.
+  `review.view.js`, `admin.view.js`). Raw database rows never leave the server.
 - `middleware/`: `auth` (loads the signed-in reader, guards private and admin routes),
   `jsonOnly` (no-store + JSON-only writes), `rateLimit` (request limits per reader, or per
   shared key) and `error` (404 and error responses).

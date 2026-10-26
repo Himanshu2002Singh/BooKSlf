@@ -64,6 +64,13 @@ CREATE TABLE IF NOT EXISTS reviews (
   CONSTRAINT reviews_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+-- Reviews the admin picked for the home page. A reader who changes their review drops off it.
+CREATE TABLE IF NOT EXISTS featured_reviews (
+  user_id     CHAR(36)  NOT NULL PRIMARY KEY,
+  featured_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT featured_reviews_review FOREIGN KEY (user_id) REFERENCES reviews (user_id) ON DELETE CASCADE
+);
+
 -- Prices of the premium looks, set in the admin panel. Free looks have no row.
 CREATE TABLE IF NOT EXISTS theme_prices (
   theme_id   VARCHAR(40) NOT NULL PRIMARY KEY,

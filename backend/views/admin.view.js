@@ -1,14 +1,9 @@
 // JSON shapes for the admin panel. Password hashes and session data never leave the server.
 import { profileUrl } from '../services/goodreads.service.js';
+import { shownLook } from './shelf.view.js';
 
-const FREE_LOOK = 'light-grid';
 const iso = value => (value ? new Date(value).toISOString() : null);
 const list = value => (Array.isArray(value) ? value : []);
-
-// The look a shelf actually shows: a premium look needs buying first (the app falls back the same way).
-function shownLook(themeId, purchased, prices) {
-  return prices[themeId] && !list(purchased).includes(themeId) ? FREE_LOOK : themeId || FREE_LOOK;
-}
 
 export function overviewView(counts, looks, prices) {
   const usage = {};
@@ -59,5 +54,15 @@ export function messageView(row) {
 }
 
 export function reviewRowView(row) {
-  return { rating: row.rating, text: row.body, name: row.name, email: row.email, username: row.username, picture: row.picture, updatedAt: iso(row.updated_at) };
+  return {
+    id: row.user_id,
+    rating: row.rating,
+    text: row.body,
+    name: row.name,
+    email: row.email,
+    username: row.username,
+    picture: row.picture,
+    updatedAt: iso(row.updated_at),
+    featured: Boolean(row.featured),
+  };
 }

@@ -16,5 +16,6 @@ router.put('/themes/:id', admin.setThemePrice);
 router.get('/messages', admin.messages);
 router.delete('/messages/:id', admin.deleteMessage);
 router.get('/reviews', admin.reviews);
+router.put('/reviews/:id', admin.featureReview);
 
 export default router;
