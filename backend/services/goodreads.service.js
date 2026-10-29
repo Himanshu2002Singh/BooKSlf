@@ -7,7 +7,7 @@ const ORIGIN = 'https://www.goodreads.com';
 const SHELVES = ['read', 'currently-reading'];
 const PAGE_SIZE = 100; // Goodreads returns at most 100 items per feed page.
 const MAX_PAGES = 10; // Per shelf, so a single import stays under ~2,000 books.
-const HEADERS = { 'User-Agent': 'Mozilla/5.0 (compatible; Bookshelf.cv importer)' };
+const HEADERS = { 'User-Agent': 'Mozilla/5.0 (compatible; Bookfolio.live importer)' };
 
 // Accepts a numeric id, a profile URL (/user/show/123-name or /review/list/123) or a
 // vanity name / URL (goodreads.com/hollandmckay). Only goodreads.com is ever fetched.

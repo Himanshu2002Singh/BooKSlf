@@ -63,7 +63,10 @@ export default function ShelfPage({ app }) {
           Goodreads synced {timeAgo(app.goodreads.syncedAt)} · <button type="button" onClick={syncNow} disabled={syncing}>{syncing ? 'Syncing…' : 'Sync now'}</button>
         </span>
       )}
-      <button type="button" onClick={() => setReviewOpen(true)}>{app.review ? 'Edit your review' : '★ Leave a review'}</button>
+      {!app.review && (
+        <button type="button" onClick={() => setReviewOpen(true)}>★ Leave a review</button>
+      )}
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1eG6q1MAQKkfRvDTqkQaGRi38TCVGMxKRUdVNNO21cpc9bA/viewform?usp=dialog" target="_blank" rel="noreferrer">Submit Feedback</a>
     </div>
   );
 

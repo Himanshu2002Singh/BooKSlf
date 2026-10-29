@@ -8,7 +8,7 @@ export default function LegalFooter() {
       <nav aria-label="Legal">
         {legalLinks.map(({ path, title }) => <a key={path} href={path}>{title}</a>)}
       </nav>
-      <p>© {new Date().getFullYear()} Bookshelf.cv · Designed and developed by <strong>Trusting Brains</strong></p>
+      <p>© {new Date().getFullYear()} Bookfolio.live · Designed and developed by <strong>Trusting Brains</strong></p>
     </div>
   );
 }

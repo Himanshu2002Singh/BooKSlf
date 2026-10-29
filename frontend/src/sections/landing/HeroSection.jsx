@@ -48,7 +48,7 @@ export default function HeroSection({ onStart, onDemo }) {
       <div className="perks"><span>✅ No Coding Required. </span><i className="dot" /><span>😍 Free Forever</span><i className="dot" /><span>😮‍💨 No Hosting. </span></div>
       <div className="btns">
         <button type="button" className="btn s av" onClick={onStart}>Create your bookshelf -  It’s Free</button>
-        <button type="button" className="btn o av" onClick={onDemo}>See Demo below</button>
+        <button type="button" className="btn o av" onClick={onDemo}>Explore Themes</button>
       </div>
       <HeroBooks />
     </section>

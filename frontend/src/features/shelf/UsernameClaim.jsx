@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const CHECK_DELAY = 350;
 
-// "Claim your link" box on the owner's shelf: pick bookshelf.cv/<username>, checked live.
+// "Claim your link" box on the owner's shelf: pick bookfolio.live/<username>, checked live.
 export default function UsernameClaim({ initial = '', current = null, onCheck, onClaim, onDone, onCancel }) {
   const [value, setValue] = useState(initial);
   const [check, setCheck] = useState({ state: 'idle', message: '' });

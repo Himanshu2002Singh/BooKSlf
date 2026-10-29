@@ -1,4 +1,4 @@
-// Rules for bookshelf.cv/<username>. The claim form checks names live through
+// Rules for bookfolio.live/<username>. The claim form checks names live through
 // GET /api/usernames/:name, so these rules live only here.
 
 // App pages and paths a username must never shadow.

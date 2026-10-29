@@ -1,8 +1,8 @@
-# Bookshelf.cv
+# Bookfolio.live
 
-Bookshelf.cv lets a reader sign up, pick a bookshelf look, add their books (from
+Bookfolio.live lets a reader sign up, pick a bookshelf look, add their books (from
 Goodreads, a shelf photo, the built-in library or by hand) and share their shelf at
-`bookshelf.cv/<username>`.
+`bookfolio.live/<username>`.
 
 The repo has two apps:
 
@@ -77,15 +77,15 @@ Vite builds those into the public JavaScript.
 - Password-reset emails aren't sent yet. In development, the reset link is printed in
   the backend's terminal. To go live, connect an email service in
   `backend/services/mail.service.js`.
-- Each reader claims `bookshelf.cv/<username>` from their shelf page, and anyone can
+- Each reader claims `bookfolio.live/<username>` from their shelf page, and anyone can
   open that link.
 
 ## Features and limits
 
 - The flow follows the Figma file: landing → sign up → choose a look → checkout (for
   premium looks) → add books → your shelf.
-- There are six shelf looks. Light, Gradient and Dark Grid are free. Digital Shelf,
-  Spine Shelf and MacOS are premium (₹749 / ₹1,249 / ₹1,749 + 18% GST by default). The
+- There are six shelf looks. Light Grid is free. Gradient Grid ($1), Dark Grid ($1),
+  Spine Shelf ($5), MacOS ($5) and Digital Shelf ($9) are premium. The
   admin sets each premium look's rupee price and its dollar card badge; checkout orders,
   the theme cards and the terms page all use the `theme_prices` table
   (`GET /api/themes/prices`).

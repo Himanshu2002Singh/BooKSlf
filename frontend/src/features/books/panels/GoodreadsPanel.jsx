@@ -69,7 +69,7 @@ export default function GoodreadsPanel({ hidden, books: imported, link, onConnec
           <h2>Synced with Goodreads</h2>
           <p className="fg-panel__desc">
             New books on your <a href={link.profileUrl} target="_blank" rel="noreferrer">Goodreads profile</a>’s Read and Currently Reading
-            shelves come in on their own whenever you open Bookshelf.cv. Last synced {timeAgo(link.syncedAt)}.
+            shelves come in on their own whenever you open Bookfolio.live. Last synced {timeAgo(link.syncedAt)}.
           </p>
           <div className="fg-gr__actions">
             <button type="button" className="fg-cta" onClick={sync} disabled={Boolean(busy)}>{busy === 'syncing' ? 'Syncing…' : 'Sync now'}</button>

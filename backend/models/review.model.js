@@ -1,4 +1,4 @@
-// The reviews table: each reader's star rating and words about Bookshelf.cv, and featured_reviews:
+// The reviews table: each reader's star rating and words about Bookfolio.live, and featured_reviews:
 // the ones the admin shows on the home page.
 import { query } from '../db/pool.js';
 import { HttpError } from '../utils/HttpError.js';

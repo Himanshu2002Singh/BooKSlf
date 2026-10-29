@@ -16,7 +16,7 @@ function ThemeShowcase({ theme }) {
         <div key={theme.id} className="showcase__swap">
           <ThemePreview theme={theme} books={catalog} stageWidth={1440}>
             <div className="showcase__head">
-              <p>BOOKSHELF.CV/</p>
+              <p>BOOKFOLIO.LIVE/</p>
               <h3>Sarah’s Reading Life</h3>
               <span>12 books · reading since 2019</span>
             </div>
@@ -48,13 +48,15 @@ export default function ThemesSection() {
                   aria-pressed={theme.id === activeTheme.id}
                   onClick={() => setActiveTheme(theme)}
                 >
-                  {theme.name} View
+                  <span>{theme.id === 'macos' ? 'MacOS view' : `${theme.name} View`}</span>
+                  <span className="pill__badge">{theme.paid ? `$${theme.usd}` : 'FREE'}</span>
                 </button>
               ))}
             </div>
           ))}
         </div>
       </div>
+      {/* "New themes are in progress" panel temporarily commented out:
       <div className="panel" id="roadmap" data-reveal>
         <div className="top">
           <div className="row"><span className="t">New themes are in progress....</span><a className="u" href="/themes">Explore Future Themes here</a></div>
@@ -62,6 +64,7 @@ export default function ThemesSection() {
         </div>
         <CaptureForm kind="updates" label="Email or social handle" placeholder="Email or any social handle" emptyMessage="Add your email or a social handle first." />
       </div>
+      */}
     </section>
   );
 }

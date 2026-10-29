@@ -21,14 +21,14 @@ export const readerRows = [
 export const stepCards = [
   { color: '#0fb5a5', icon: '5ec9e.svg', title: 'Sign Up Free', fixed: true, body: <p>Create your account in 30 seconds. No credit card, no commitments. Just your email.</p> },
   { color: '#fcca3c', icon: '67153.svg', title: 'Add Your Books', body: <ul><li>Import from Goodreads, </li><li>Snap your shelf, or</li><li>Search our library of 20M+ titles. Easy.</li></ul> },
-  { color: '#f9916c', icon: '6221c.svg', title: 'Go Live Instantly', fixed: true, body: <p>Hit publish and get your bookshelf.cv/yourname link. Share it everywhere you live online.</p> },
+  { color: '#f9916c', icon: '6221c.svg', title: 'Go Live Instantly', fixed: true, body: <p>Hit publish and get your bookfolio.live/yourname link. Share it everywhere you live online.</p> },
 ];
 
 export const faqCards = [
   {
     color: '#fcca3c',
-    title: 'Is bookshelf.cv free foreever?',
-    body: <><p><b>100% free forever. </b></p><p>No credit card required, no trial period, no hidden fees. </p><p /><p>You will get a full digital bookshelf with a custom url, and sharable links. </p></>,
+    title: 'Is bookfolio.live free foreever?',
+    body: <><p><b>100% free forever. </b></p><p>No credit card required, no trial period, no hidden fees. </p><p /><p>You will get a full digital bookshelf with a custom url. </p></>,
   },
   {
     color: '#df79e7',

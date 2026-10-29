@@ -19,7 +19,7 @@ function newBookId() {
 
 // "Add your books" step: pick a source (Goodreads, photo, library), then edit or add
 // books by hand. Every panel stays mounted, so switching tabs never loses a running import.
-export default function AddBooks({ books = [], goodreads, onConnectGoodreads, onSyncGoodreads, onBooksChange, onContinue }) {
+export default function AddBooks({ books = [], goodreads, onConnectGoodreads, onSyncGoodreads, onBooksChange, onContinue, onBackToShelf }) {
   const fromSource = source => books.filter(book => (source === 'library' ? !book.source || book.source === 'library' : book.source === source));
   // Coming back to this page (Back, refresh, "Add book") shows what is already on the shelf.
   const [mode, setMode] = useState(() => (fromSource('goodreads').length ? 'goodreads' : fromSource('photo').length ? 'photo' : books.length ? 'library' : 'goodreads'));
@@ -97,7 +97,18 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
         onAddManually={addManually('library')}
       />
 
-      {books.length > 0 && <button type="button" className="fg-cta" onClick={onContinue}>Continue Creating Shelf</button>}
+      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+        {onBackToShelf && (
+          <button type="button" className="sp-btn" style={{ height: 56, padding: '0 28px', fontSize: 16, borderRadius: 16 }} onClick={onBackToShelf}>
+            Back to Shelf
+          </button>
+        )}
+        {books.length > 0 && (
+          <button type="button" className="fg-cta" style={{ flex: 1, minWidth: 240, maxWidth: 360 }} onClick={onContinue}>
+            Continue Creating Shelf
+          </button>
+        )}
+      </div>
 
       {editor && (
         <Modal onClose={() => setEditor(null)} labelledBy="book-editor-heading" className="fg-edit-dialog">

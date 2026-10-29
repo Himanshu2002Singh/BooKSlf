@@ -52,7 +52,7 @@ export async function payWithRazorpay({ orderId, keyId, amountPaise, description
       key: activeKey,
       amount: amountPaise,
       currency: 'INR',
-      name: 'Bookshelf.cv',
+      name: 'Bookfolio.live',
       description,
       ...(orderId ? { order_id: orderId } : {}),
       prefill,

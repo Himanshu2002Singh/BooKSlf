@@ -1,4 +1,4 @@
-// The users table: accounts, sign-in lockout and usernames (bookshelf.cv/<username>).
+// The users table: accounts, sign-in lockout and usernames (bookfolio.live/<username>).
 import { randomUUID } from 'node:crypto';
 import { db, query } from '../db/pool.js';
 import { HttpError } from '../utils/HttpError.js';

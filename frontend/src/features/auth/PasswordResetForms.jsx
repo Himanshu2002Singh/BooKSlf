@@ -46,7 +46,7 @@ export function ForgotPasswordForm({ onRequest }) {
         </div>
         {sent ? (
           <p role="status" className="fg-auth__note">
-            If <b>{email.trim()}</b> has a Bookshelf.cv account, a reset link is on its way. It works once and expires in an hour.
+            If <b>{email.trim()}</b> has a Bookfolio.live account, a reset link is on its way. It works once and expires in an hour.
           </p>
         ) : (
           <>

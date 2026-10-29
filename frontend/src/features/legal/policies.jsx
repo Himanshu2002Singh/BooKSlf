@@ -2,7 +2,7 @@ import { themePrice, themes } from '../../data/themes.js';
 
 // Copy for the legal pages. Premium looks are one-time digital purchases with no
 // refunds, returns or cancellations; keep the three documents consistent on that.
-export const CONTACT_EMAIL = 'support@bookfolio.live';
+export const CONTACT_EMAIL = 'amangupta.ux@gmail.com';
 export const LAST_UPDATED = '26 October 2026';
 
 const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;
@@ -24,7 +24,7 @@ const privacy = {
   sections: [
     ['Information we collect', <>
       <ul>
-        <li><strong>Account details.</strong> Your name and email address. If you sign up with a password, we store only a scrypt hash of it, never the password itself. If you continue with Google, Google shares your name, email address, profile picture and Google account ID with us.</li>
+        <li><strong>Account details.</strong> Your name and email address. When you continue with Google, Google shares your name, email address, profile picture and Google account ID with us.</li>
         <li><strong>Your shelf.</strong> The books you add, the look you choose, the looks you have bought and the username you claim.</li>
         <li><strong>Goodreads profile.</strong> The Goodreads profile link or ID you enter. We read only that profile’s public “Read” and “Currently Reading” shelves, and we keep the profile so books you add there later can sync to your shelf.</li>
         <li><strong>Reviews.</strong> The star rating and words you send when you review Bookfolio. We may show your words on our home page.</li>

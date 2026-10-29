@@ -14,7 +14,7 @@ export default function AdminLayout({ page, admin, onRefresh, children }) {
     <div className="ap">
       <aside className="ap-side">
         <div className="ap-side__brand">
-          <a className="ap-brand" href="/">Bookshelf.cv</a>
+          <a className="ap-brand" href="/">Bookfolio.live</a>
           <span className="ap-brand__tag">Admin</span>
         </div>
         <nav className="ap-nav" aria-label="Admin pages">

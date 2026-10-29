@@ -20,7 +20,7 @@ export default function LandingPage({ app }) {
   usePageTitle();
   return (
     <div className="fg-landing">
-      <LandingNav />
+      <LandingNav app={app} />
       <main>
         <HeroSection onStart={app.startSetup} onDemo={showDemo} />
         <StepsSection />
@@ -29,7 +29,7 @@ export default function LandingPage({ app }) {
         <StoriesSection onStart={app.startSetup} email={app.user?.email} />
         <CtaSection onStart={app.startSetup} />
       </main>
-      <LandingFooter />
+      <LandingFooter app={app} />
     </div>
   );
 }

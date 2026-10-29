@@ -45,7 +45,7 @@ function ReadingBook({ book, onClose }) {
               <span className="reading-page-number">— &nbsp; 01 &nbsp; —</span>
             </div>
             <div className="reading-leaf__face reading-leaf__back" aria-hidden={!turned}>
-              <p className="reading-page__eyebrow">EX LIBRIS · BOOKSHELF.CV</p>
+              <p className="reading-page__eyebrow">EX LIBRIS · BOOKFOLIO.LIVE</p>
               <p className="library-card__heading">Library card</p>
               <dl className="library-card__entries">
                 <div><dt>Title</dt><dd>{book.title}</dd></div>
@@ -144,7 +144,7 @@ function BookOpening({ book, origin, onOpened, onDone, onCancel }) {
         </div>
         <div ref={coverRef} className="bo-cover">
           <div className="bo-cover__front"><BookCover book={book} interactive={false} loading="eager" /></div>
-          <div className="bo-cover__inside"><p className="bo-plate"><span>This book belongs to</span><b>Bookshelf.cv</b></p></div>
+          <div className="bo-cover__inside"><p className="bo-plate"><span>This book belongs to</span><b>Bookfolio.live</b></p></div>
         </div>
       </div>
     </div>

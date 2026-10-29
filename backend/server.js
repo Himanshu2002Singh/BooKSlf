@@ -5,5 +5,5 @@ const missing = ['DATABASE_URL', 'SESSION_SECRET', 'GOOGLE_CLIENT_ID', 'GEMINI_A
 if (missing.length) console.warn(`Missing in backend/.env: ${missing.join(', ')}. Features that need them will answer 503.`);
 
 app.listen(port, () => {
-  console.log(`Bookshelf.cv API on http://localhost:${port}/api`);
+  console.log(`Bookfolio.live API on http://localhost:${port}/api`);
 });

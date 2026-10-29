@@ -9,6 +9,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import LegalPage from './pages/LegalPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import OtherUsecasesPage from './pages/OtherUsecasesPage.jsx';
 import PublicShelfPage from './pages/PublicShelfPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import ShelfPage from './pages/ShelfPage.jsx';
@@ -16,6 +17,7 @@ import ThemesPage from './pages/ThemesPage.jsx';
 
 const pages = {
   '/': LandingPage,
+  '/other-usecases': OtherUsecasesPage,
   '/signup': AuthPage,
   '/login': AuthPage,
   '/forgot': ForgotPasswordPage,
@@ -30,7 +32,7 @@ const pages = {
   '/refunds': LegalPage,
 };
 
-// Any other single-segment path is a reader's public shelf: bookshelf.cv/<username>.
+// Any other single-segment path is a reader's public shelf: bookfolio.live/<username>.
 const USERNAME_PATH = /^\/[a-z0-9-]{3,30}$/i;
 
 export default function App() {

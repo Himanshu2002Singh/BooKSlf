@@ -6,6 +6,7 @@ import Icon from './Icon.jsx';
 const KINDS = {
   question: { label: 'Question', icon: 'help', tone: 'brand' },
   updates: { label: 'Theme updates', icon: 'bell', tone: 'green' },
+  usecase: { label: 'Usecase idea', icon: 'help', tone: 'brand' },
 };
 
 // One message from the home page: a question to answer by email, or an email or handle that
@@ -13,10 +14,10 @@ const KINDS = {
 export default function MessageCard({ message, onCopy, onDelete }) {
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const kind = KINDS[message.kind];
+  const kind = KINDS[message.kind] ?? KINDS.question;
   const copyText = message.kind === 'updates' ? message.text : message.email;
-  const reply = message.kind === 'question' && message.email
-    ? `mailto:${message.email}?subject=${encodeURIComponent('Your question to Bookshelf.cv')}&body=${encodeURIComponent(`\n\n> ${message.text}`)}`
+  const reply = (message.kind === 'question' || message.kind === 'usecase') && message.email
+    ? `mailto:${message.email}?subject=${encodeURIComponent(message.kind === 'usecase' ? 'Your shelf idea for Bookfolio.live' : 'Your question to Bookfolio.live')}&body=${encodeURIComponent(`\n\n> ${message.text}`)}`
     : null;
 
   async function remove() {

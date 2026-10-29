@@ -79,7 +79,7 @@
   .sp-hero > .sp-link span + button { margin-left: auto; }
 }
 
-/* Claim / change bookshelf.cv/<username> */
+/* Claim / change bookfolio.live/<username> */
 .sp-claim { position: relative; width: 605px; max-width: 100%; margin-top: 26px; text-align: left; }
 .sp-claim > label { display: block; margin-bottom: 8px; font: 600 14px/20px 'Inter', sans-serif; color: #1c1209; text-align: center; }
 .sp-claim .sp-link { margin-top: 0; gap: 4px; }
@@ -91,10 +91,10 @@
 .sp-claim .sp-link button:disabled { opacity: .45; cursor: not-allowed; text-decoration: none; }
 .sp-claim__status { min-height: 20px; margin: 6px 0 0; font: 500 13px/20px 'Inter', sans-serif; text-align: center; color: #6f655b; }
 .sp-claim__status[data-state='ok'] { color: #15803d; }
-.sp-claim__status[data-state='bad'] { color: #b91c1c; }
 .sp-link__edit { color: #6f655b !important; }
 
 /* Owner-only links under the share buttons: Goodreads sync and the review */
 .sp-tools { position: relative; margin-top: 4px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 20px; font: 500 13px/20px 'Inter', sans-serif; color: #6f655b; }
-.sp-tools button { padding: 0; border: 0; background: none; font: inherit; color: #7d3c1c; text-decoration: underline; }
+.sp-tools button, .sp-tools a { padding: 0; border: 0; background: none; font: inherit; color: #7d3c1c; text-decoration: underline; cursor: pointer; }
+.sp-tools a:hover, .sp-tools button:hover { color: #e13a00; }
 .sp-tools button:disabled { opacity: .6; text-decoration: none; }

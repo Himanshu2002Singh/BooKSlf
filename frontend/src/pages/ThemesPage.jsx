@@ -1,6 +1,5 @@
 import FlowShell from '../components/FlowShell.jsx';
 import catalog from '../data/books.js';
-import AuthNavLink from '../features/auth/AuthNavLink.jsx';
 import ThemePicker from '../features/themes/ThemePicker.jsx';
 import usePageTitle from '../app/usePageTitle.js';
 
@@ -8,7 +7,13 @@ import usePageTitle from '../app/usePageTitle.js';
 export default function ThemesPage({ app }) {
   usePageTitle('Choose your look');
   return (
-    <FlowShell navRight={<AuthNavLink app={app} />}>
+    <FlowShell
+      navRight={
+        <button type="button" className="sp-btn" onClick={() => app.navigate('/shelf')}>
+          Back to Shelf
+        </button>
+      }
+    >
       <ThemePicker
         selectedTheme={app.theme}
         books={app.books.length ? app.books : catalog}
@@ -16,7 +21,9 @@ export default function ThemesPage({ app }) {
         onSelect={app.selectTheme}
         onBuy={chosen => app.navigate(`/purchase?theme=${chosen.id}`)}
         onContinue={app.continueFromThemes}
+        onBackToShelf={() => app.navigate('/shelf')}
       />
     </FlowShell>
   );
 }
+

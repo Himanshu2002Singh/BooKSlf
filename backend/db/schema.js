@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   picture         VARCHAR(500) NULL,
   password_hash   VARCHAR(200) NULL,          -- NULL for Google-only accounts
   google_sub      VARCHAR(64)  NULL UNIQUE,   -- Google's stable account id
-  username        VARCHAR(30)  NULL UNIQUE,   -- bookshelf.cv/<username>, claimed after sign-up
+  username        VARCHAR(30)  NULL UNIQUE,   -- bookfolio.live/<username>, claimed after sign-up
   session_version INT          NOT NULL DEFAULT 0, -- bumped on password reset to sign out other devices
   failed_logins   INT          NOT NULL DEFAULT 0,
   locked_until    DATETIME     NULL,
@@ -78,7 +78,13 @@ CREATE TABLE IF NOT EXISTS theme_prices (
   usd        INT         NOT NULL,   -- shown on the theme card's badge
   updated_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-INSERT IGNORE INTO theme_prices (theme_id, inr, usd) VALUES ('digital-shelf', 749, 9), ('spine-shelf', 1249, 15), ('macos', 1749, 21);
+INSERT INTO theme_prices (theme_id, inr, usd) VALUES
+  ('gradient-grid', 89, 1),
+  ('dark-grid', 89, 1),
+  ('spine-shelf', 399, 5),
+  ('macos', 399, 5),
+  ('digital-shelf', 749, 9)
+ON DUPLICATE KEY UPDATE inr = VALUES(inr), usd = VALUES(usd);
 
 -- The landing page's two forms: an email or handle for news of new themes, or a question.
 CREATE TABLE IF NOT EXISTS messages (

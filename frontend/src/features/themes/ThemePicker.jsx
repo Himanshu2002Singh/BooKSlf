@@ -7,7 +7,7 @@ function badge(theme) {
   return theme.paid ? `PREMIUM - $${theme.usd}` : 'FREE';
 }
 
-export default function ThemePicker({ selectedTheme, books, purchasedThemeIds = [], onSelect, onBuy, onContinue }) {
+export default function ThemePicker({ selectedTheme, books, purchasedThemeIds = [], onSelect, onBuy, onContinue, onBackToShelf }) {
   const [previewId, setPreviewId] = useState(null);
   const selectedId = getTheme(selectedTheme).id;
   const previewTheme = previewId ? getTheme(previewId) : null;
@@ -48,7 +48,16 @@ export default function ThemePicker({ selectedTheme, books, purchasedThemeIds = 
         })}
       </div>
 
-      <button type="button" className="fg-cta" onClick={onContinue}>Continue Fetching Books</button>
+      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+        {onBackToShelf && (
+          <button type="button" className="sp-btn" style={{ height: 56, padding: '0 28px', fontSize: 16, borderRadius: 16 }} onClick={onBackToShelf}>
+            Back to Shelf
+          </button>
+        )}
+        <button type="button" className="fg-cta" style={{ flex: 1, minWidth: 240, maxWidth: 360 }} onClick={onContinue}>
+          Continue Fetching Books
+        </button>
+      </div>
 
       {previewTheme && (
         <Modal onClose={() => setPreviewId(null)} labelledBy="theme-preview-title" className="fg-preview-dialog">

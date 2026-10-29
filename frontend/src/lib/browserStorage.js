@@ -1,6 +1,6 @@
 // Browser cache of the signed-in reader's shelf, so pages render before the server answers.
 // The server copy (GET /api/me) is the source of truth and validates everything it stores.
-const DRAFT_KEY = 'bookshelf.cv.draft.v1';
+const DRAFT_KEY = 'bookfolio.live.draft.v1';
 const EMPTY = { books: [], themeId: 'light-grid', purchasedThemeIds: [] };
 
 export function readDraft() {
@@ -31,7 +31,7 @@ export function clearDraft() {
 }
 
 // Whether this browser has already shown a reader the "review us" prompt (it comes once).
-const reviewAskedKey = userId => `bookshelf.cv.review-asked.${userId}`;
+const reviewAskedKey = userId => `bookfolio.live.review-asked.${userId}`;
 
 export function wasReviewAsked(userId) {
   try {

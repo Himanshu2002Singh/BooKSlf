@@ -27,7 +27,7 @@ export function goodreadsView(link) {
 }
 
 // What sign-up, sign-in and GET /api/me answer: the reader, their shelf, their review of
-// Bookshelf.cv and their Goodreads link (both null until they have one).
+// Bookfolio.live and their Goodreads link (both null until they have one).
 export function accountView(row, { shelf, review, goodreads }) {
   return { user: userView(row), shelf, review: reviewView(review), goodreads: goodreadsView(goodreads) };
 }

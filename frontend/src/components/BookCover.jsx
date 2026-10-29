@@ -135,7 +135,7 @@ export default function BookCover({
                 <div className="border border-white/25 p-2 h-full flex flex-col justify-between">
                   <div className="pt-2">
                     <span className="block text-[9px] uppercase tracking-[0.2em] text-white/70">
-                      Bookshelf
+                      Bookfolio
                     </span>
                     <h4 className="mt-1 font-serif text-sm font-bold leading-snug line-clamp-3">
                       {title || 'Untitled'}

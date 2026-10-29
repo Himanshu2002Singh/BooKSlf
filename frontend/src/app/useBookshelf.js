@@ -127,6 +127,14 @@ export default function useBookshelf() {
     if (needsSignIn) navigate('/signup', { replace: true });
   }, [needsSignIn, navigate]);
 
+  // If the user already has a bookshelf and they are signed in, directly land them on their shelf.
+  const alreadySignedIn = ready && Boolean(user) && (pathname === '/login' || pathname === '/signup');
+  useEffect(() => {
+    if (alreadySignedIn) {
+      navigate(books.length ? '/shelf' : '/themes', { replace: true });
+    }
+  }, [alreadySignedIn, books.length, navigate]);
+
   function updateDraft(changes) {
     setDraft(current => ({ ...current, ...changes }));
   }
@@ -140,7 +148,8 @@ export default function useBookshelf() {
   return {
     ready,
     // Signed-out visitors see the sign-up page right away while the URL catches up.
-    pathname: needsSignIn ? '/signup' : pathname,
+    // Signed-in users see their shelf/themes right away if on /login or /signup.
+    pathname: needsSignIn ? '/signup' : (alreadySignedIn ? (books.length ? '/shelf' : '/themes') : pathname),
     navigate,
     user,
     books,

@@ -75,7 +75,7 @@ export default function Checkout({ theme, name = '', email = '', onBack, onPaid 
         <div className="pp-summary__inner">
           <div className="pp-merchant">
             <span className="pp-merchant__logo" aria-hidden="true">B</span>
-            <span>Bookshelf.cv</span>
+            <span>Bookfolio.live</span>
             <span className="pp-pill">Pay in INR</span>
           </div>
           <p className="pp-product">{chosen.name} theme</p>

@@ -46,7 +46,7 @@ export function FlowNav({ left, right }) {
   return (
     <header className="fg-nav">
       <div className="fg-nav__side">
-        <a className="fg-logo" href="/">Bookshelf.cv</a>
+        <a className="fg-logo" href="/">Bookfolio.live</a>
         {left}
       </div>
       <div className="fg-nav__side">{right}</div>

@@ -13,11 +13,11 @@ export function applyThemePrices(prices = {}) {
 
 export const themes = [
   { id: 'light-grid', name: 'Light Grid', view: 'grid', variant: 'light', paid: false },
-  { id: 'gradient-grid', name: 'Gradient Grid', view: 'grid', variant: 'gradient', paid: false },
-  { id: 'dark-grid', name: 'Dark Grid', view: 'grid', variant: 'dark', paid: false },
+  { id: 'gradient-grid', name: 'Gradient Grid', view: 'grid', variant: 'gradient', paid: true, usd: 1, inr: 89 },
+  { id: 'dark-grid', name: 'Dark Grid', view: 'grid', variant: 'dark', paid: true, usd: 1, inr: 89 },
+  { id: 'spine-shelf', name: 'Spine Shelf', view: 'spine', variant: 'board', paid: true, usd: 5, inr: 399 },
+  { id: 'macos', name: 'MacOS', view: 'macos', variant: 'light', paid: true, usd: 5, inr: 399 },
   { id: 'digital-shelf', name: 'Digital Shelf', view: 'shelf', variant: 'gradient', paid: true, usd: 9, inr: 749 },
-  { id: 'spine-shelf', name: 'Spine Shelf', view: 'spine', variant: 'board', paid: true, usd: 15, inr: 1249 },
-  { id: 'macos', name: 'MacOS', view: 'macos', variant: 'light', paid: true, usd: 21, inr: 1749 },
 ];
 
 export function getTheme(theme) {

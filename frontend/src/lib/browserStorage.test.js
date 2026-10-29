@@ -22,9 +22,9 @@ test('the shelf cache round-trips, ignores junk and clears', () => {
   saveDraft({ themeId: 'macos', purchasedThemeIds: ['macos'], books: [{ id: 'x', title: 'X', author: 'Y', cover: null }, null, { id: 7 }] });
   assert.deepEqual(readDraft(), { themeId: 'macos', purchasedThemeIds: ['macos'], books: [{ id: 'x', title: 'X', author: 'Y', cover: null }] });
 
-  storage.setItem('bookshelf.cv.draft.v1', '{bad json');
+  storage.setItem('bookfolio.live.draft.v1', '{bad json');
   assert.deepEqual(readDraft(), { books: [], themeId: 'light-grid', purchasedThemeIds: [] });
 
   clearDraft();
-  assert.equal(storage.getItem('bookshelf.cv.draft.v1'), null);
+  assert.equal(storage.getItem('bookfolio.live.draft.v1'), null);
 });

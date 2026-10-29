@@ -93,7 +93,9 @@ function bookOrigin(button) {
 }
 
 function selectBook(onBookSelect, book) {
-  return event => onBookSelect?.(book, bookOrigin(event.currentTarget));
+  // Book click disabled per user request; kept commented out so hover effects remain active
+  // return event => onBookSelect?.(book, bookOrigin(event.currentTarget));
+  return undefined;
 }
 
 function GridView({ books, onBookSelect }) {

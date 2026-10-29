@@ -4,7 +4,7 @@ import '../../styles/review.css';
 
 const WORDS = ['Not for me', 'Could be better', 'Good', 'Really good', 'Loved it!'];
 
-// Asks the reader to rate Bookshelf.cv out of 5 and, if they like, say why. It opens once their
+// Asks the reader to rate Bookfolio.live out of 5 and, if they like, say why. It opens once their
 // shelf is made, and from "Leave a review" on their shelf page.
 export default function ReviewDialog({ review, onSave, onClose }) {
   const [rating, setRating] = useState(review?.rating ?? 0);
@@ -34,13 +34,19 @@ export default function ReviewDialog({ review, onSave, onClose }) {
       {phase === 'done' ? (
         <div className="rv-done">
           <h2 id="review-title">Thank you!</h2>
-          <p>Your review helps us make Bookshelf.cv better for every reader.</p>
+          <p>Your review helps us make Bookfolio.live better for every reader.</p>
+          <p style={{ marginTop: 12, fontSize: 13, color: '#6f655b' }}>
+            Want to share detailed thoughts or feature requests?{' '}
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1eG6q1MAQKkfRvDTqkQaGRi38TCVGMxKRUdVNNO21cpc9bA/viewform?usp=dialog" target="_blank" rel="noreferrer" style={{ color: '#e13a00', textDecoration: 'underline', fontWeight: 500 }}>
+              Submit Feedback Form
+            </a>
+          </p>
           <button type="button" className="fg-cta" onClick={onClose}>Back to my shelf</button>
         </div>
       ) : (
         <form onSubmit={submit} noValidate>
           <h2 id="review-title">{review ? 'Edit your review' : 'Your shelf is ready! How did we do?'}</h2>
-          <p>Rate Bookshelf.cv and tell us what you think. We may show your words on our home page, with your name and photo.</p>
+          <p>Rate Bookfolio.live and tell us what you think. We may show your words on our home page, with your name and photo.</p>
           <fieldset className="rv-stars">
             <legend className="sr-only">Your rating</legend>
             {WORDS.map((word, index) => (
@@ -66,6 +72,12 @@ export default function ReviewDialog({ review, onSave, onClose }) {
             <button type="button" className="fg-outline" onClick={onClose}>Maybe later</button>
             <button type="submit" className="fg-cta" disabled={phase === 'saving'}>{phase === 'saving' ? 'Sending…' : 'Send review'}</button>
           </div>
+          <p style={{ marginTop: 16, fontSize: 13, color: '#6f655b' }}>
+            Have detailed suggestions or thoughts?{' '}
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1eG6q1MAQKkfRvDTqkQaGRi38TCVGMxKRUdVNNO21cpc9bA/viewform?usp=dialog" target="_blank" rel="noreferrer" style={{ color: '#e13a00', textDecoration: 'underline', fontWeight: 500 }}>
+              Submit Feedback
+            </a>
+          </p>
         </form>
       )}
     </Modal>

@@ -1,4 +1,4 @@
-// Calls the Bookshelf.cv API (../backend). Throws an Error carrying the server's
+// Calls the Bookfolio.live API (../backend). Throws an Error carrying the server's
 // message, so forms can show it as-is.
 export async function api(path, { method = 'GET', body, signal } = {}) {
   let response;
@@ -12,7 +12,7 @@ export async function api(path, { method = 'GET', body, signal } = {}) {
     });
   } catch (error) {
     if (error.name === 'AbortError') throw error;
-    throw Object.assign(new Error('Can’t reach Bookshelf.cv right now. Check your connection and try again.'), { status: 0 });
+    throw Object.assign(new Error('Can’t reach Bookfolio.live right now. Check your connection and try again.'), { status: 0 });
   }
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {

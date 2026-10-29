@@ -20,10 +20,10 @@ export function cleanReview(input) {
 // needs an email so it can be answered. A signed-in reader's account email is used when none is given.
 export function cleanMessage(input, user) {
   const { kind } = input ?? {};
-  if (kind !== 'updates' && kind !== 'question') throw new HttpError(400, 'Unknown form.');
+  if (kind !== 'updates' && kind !== 'question' && kind !== 'usecase') throw new HttpError(400, 'Unknown form.');
   const body = text(input.text, `Keep it under ${MAX_FEEDBACK} characters.`);
-  if (!body) throw new HttpError(400, kind === 'question' ? 'Type your question first.' : 'Add your email or a social handle first.');
+  if (!body) throw new HttpError(400, kind === 'updates' ? 'Add your email or a social handle first.' : 'Type your message or idea first.');
   const email = input.email ? cleanEmail(input.email) : user?.email ?? null;
-  if (kind === 'question' && !email) throw new HttpError(400, 'Add your email so we can answer you.');
+  if ((kind === 'question' || kind === 'usecase') && !email) throw new HttpError(400, 'Add your email so we can answer you.');
   return { kind, body, email, userId: user?.id ?? null };
 }

@@ -5,7 +5,7 @@ import MessageCard from '../components/MessageCard.jsx';
 import Skeleton from '../components/Skeleton.jsx';
 import { count } from '../format.js';
 
-const FILTERS = [['all', 'All'], ['question', 'Questions'], ['updates', 'Theme updates']];
+const FILTERS = [['all', 'All'], ['question', 'Questions'], ['usecase', 'Usecase ideas'], ['updates', 'Theme updates']];
 
 // /admin/messages — what visitors sent from the home page, newest first.
 export default function MessagesPage({ admin }) {
@@ -44,7 +44,12 @@ export default function MessagesPage({ admin }) {
   }
 
   const all = messages ?? [];
-  const totals = { all: all.length, question: all.filter(message => message.kind === 'question').length, updates: all.filter(message => message.kind === 'updates').length };
+  const totals = {
+    all: all.length,
+    question: all.filter(message => message.kind === 'question').length,
+    usecase: all.filter(message => message.kind === 'usecase').length,
+    updates: all.filter(message => message.kind === 'updates').length,
+  };
   const shown = all.filter(message => kind === 'all' || message.kind === kind);
 
   return (
