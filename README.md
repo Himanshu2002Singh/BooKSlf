@@ -13,6 +13,7 @@ The repo has two apps:
 
 You need Node 22+ and a local MySQL server.
 
+
 **Backend** on http://localhost:4000:
 
 ```sh
