@@ -182,10 +182,29 @@
   .sv-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: calc(100% - 32px); }
   .sv-planks { --dbook-w: 84px; padding: 48px 0 72px; gap: 48px; }
   .sv-plank-row { max-width: calc(100% - 24px); }
-  .sv-plank-row__books { gap: 16px 20px; }
+  .sv-plank-row__books { gap: 16px 20px; padding: 0 !important; }
   .sv-mac { padding: 40px 16px 64px; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); column-gap: 12px; row-gap: 28px; }
   .sv-mac__caption { font-size: 13px; line-height: 17px; }
   .sv-plank { height: 16px; }
   .sv-spine { --spine-w: 34px; }
   .sv-spine__title { font-size: 12px; }
+}
+
+@media (max-width: 600px) {
+  .sv-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; max-width: calc(100% - 24px); padding: 36px 0 60px; }
+  .sv-planks { --dbook-w: 80px; padding: 36px 0 60px; gap: 40px; }
+  .sv-plank-row { max-width: calc(100% - 20px); }
+  .sv-plank-row__books { gap: 14px 16px; padding: 0 !important; }
+  .sv-mac { padding: 36px 14px 56px; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); column-gap: 10px; row-gap: 24px; }
+  .sv-mac__caption { font-size: 12px; line-height: 16px; }
+  .sv-plank { height: 16px; }
+  .sv-spine { --spine-w: 32px; }
+  .sv-spine__title { font-size: 11px; }
+}
+
+@media (max-width: 380px) {
+  .sv-planks { --dbook-w: 70px; gap: 32px; }
+  .sv-plank-row__books { gap: 10px 12px; }
+  .sv-spine { --spine-w: 28px; }
+  .sv-grid { gap: 10px; max-width: calc(100% - 16px); }
 }

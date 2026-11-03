@@ -74,9 +74,71 @@
   .sp-shares { gap: 10px; }
   .sp-share { height: 38px; padding: 0 14px; font-size: 14px; }
   /* The shelf address gets its own line so the username is never cut off; Change and Copy link sit under it. */
-  .sp-hero > .sp-link { flex-wrap: wrap; height: auto; padding: 12px 16px; row-gap: 6px; }
+  .sp-hero > .sp-link,
+  .sp-claim .sp-link { flex-wrap: wrap; height: auto; padding: 12px 16px; row-gap: 6px; }
   .sp-hero > .sp-link span { flex-basis: calc(100% - 20px); white-space: normal; overflow-wrap: anywhere; }
   .sp-hero > .sp-link span + button { margin-left: auto; }
+}
+
+@media (max-width: 540px) {
+  .sp-claim .sp-link {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 14px;
+    row-gap: 8px;
+  }
+  .sp-claim__host {
+    font-size: 13px;
+  }
+  .sp-claim input {
+    font-size: 14px;
+    min-width: 100px;
+  }
+  .sp-claim .sp-link button {
+    font-size: 13px;
+    margin-left: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sp-page .fg-nav {
+    padding: 10px 14px;
+    row-gap: 8px;
+  }
+  .sp-page .fg-nav > .fg-nav__side {
+    gap: 8px;
+  }
+  .sp-btn {
+    height: 36px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .sp-hero {
+    padding: 28px 14px 20px;
+    min-height: auto;
+  }
+  .sp-title {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .sp-eyebrow {
+    font-size: 12px;
+  }
+  .sp-meta {
+    font-size: 13px;
+  }
+  .sp-shares {
+    gap: 8px;
+  }
+  .sp-share {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  .sp-tools {
+    gap: 6px 12px;
+    font-size: 12px;
+  }
 }
 
 /* Claim / change bookfolio.live/<username> */

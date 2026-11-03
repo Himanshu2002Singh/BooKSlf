@@ -632,6 +632,9 @@
   .uc-hero {
     padding: 60px 16px 70px;
   }
+  .uc-hero__decor {
+    display: none;
+  }
   .uc-hero__title {
     font-size: 32px;
   }
@@ -649,11 +652,19 @@
     white-space: normal;
     text-align: center;
   }
+  .uc-showcases {
+    gap: 56px;
+    padding: 48px 16px 64px;
+  }
   .uc-item__title {
     font-size: 28px;
   }
   .uc-item__sub {
     font-size: 17px;
+  }
+  .uc-laptop {
+    width: 100%;
+    max-width: 100%;
   }
   .uc-album {
     width: 48px;
@@ -677,7 +688,65 @@
   .uc-news-card__snippet {
     display: none;
   }
+  .uc-ideas {
+    padding: 48px 16px 60px;
+  }
+  .uc-ideas__container {
+    max-width: 100%;
+  }
   .uc-ideas__title {
     font-size: 26px;
+  }
+  .uc-ideas__textarea,
+  .uc-ideas__input,
+  .uc-ideas__submit {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .uc-ideas__submit {
+    height: 50px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .uc-hero {
+    padding: 44px 16px 52px;
+  }
+  .uc-hero__title {
+    font-size: 27px;
+    line-height: 1.25;
+  }
+  .uc-hero__subtitle {
+    font-size: 14px;
+    line-height: 22px;
+    margin-top: 14px;
+  }
+  .uc-hero__content .btns {
+    margin-top: 24px;
+    gap: 10px;
+    max-width: 320px;
+  }
+  .uc-hero__content .btn {
+    padding: 13px 18px;
+    font-size: 15px;
+  }
+  .uc-item__title {
+    font-size: 24px;
+  }
+  .uc-item__sub {
+    font-size: 15px;
+  }
+  .uc-item__desc {
+    font-size: 14px;
+    line-height: 21px;
+  }
+  .uc-ideas__title {
+    font-size: 22px;
+  }
+  .uc-ideas__subtitle {
+    font-size: 14px;
+    line-height: 20px;
   }
 }

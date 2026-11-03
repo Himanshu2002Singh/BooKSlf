@@ -100,3 +100,14 @@
   .pp-stack__row { grid-template-columns: 1fr; }
   .pp-stack__row input + input { border-left: 1px solid #2a2a2a; }
 }
+
+@media (max-width: 480px) {
+  .pp-summary { padding: 28px 16px 20px; }
+  .pp-form { padding: 24px 16px 36px; }
+  .pp-price { font-size: 22px; line-height: 28px; }
+  .pp-discount__form { flex-wrap: wrap; }
+  .pp-phone { font-size: 13px; }
+  .pp-phone input { font-size: 13px; }
+  .pp-check--terms { font-size: 12px; line-height: 17px; }
+  .pp-pay { height: 44px; font-size: 15px; }
+}
