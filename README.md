@@ -9,6 +9,7 @@ The repo has two apps:
 - `frontend/`: React 19 + Vite + Tailwind CSS v4.
 - `backend/`: Node 22 + Express 5 + MySQL, organised as MVC.
 
+
 ## Development
 
 You need Node 22+ and a local MySQL server.
