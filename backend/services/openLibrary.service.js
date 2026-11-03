@@ -7,7 +7,7 @@ import { HttpError } from '../utils/HttpError.js';
 
 const SEARCH_URL = 'https://openlibrary.org/search.json';
 const COVERS = 'https://covers.openlibrary.org/b/id';
-const HEADERS = { 'User-Agent': 'Bookfolio/1.0 (amangupta.ux@gmail.com)' };
+const HEADERS = { 'User-Agent': 'Bookfolio/1.0 (bookfoliolive@gmail.com)' };
 const FIELDS = 'key,title,author_name,first_publish_year,cover_i';
 const LIMIT = 20;
 const TIMEOUT_MS = 8000;

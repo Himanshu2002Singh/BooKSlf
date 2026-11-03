@@ -94,7 +94,7 @@ export default function LandingNav({ app }) {
         <nav className={`nav__links ${open ? 'nav__links--open' : ''}`} aria-label="Main navigation">
           <a className="nav__link" href="/" onClick={handleHomeClick}>Home</a>
           <a className={`nav__link${isOtherUsecases ? ' nav__link--active' : ''}`} href="/other-usecases" onClick={handleOtherUsecasesClick}>Other Usecases</a>
-          <a className="nav__link" href="mailto:amangupta.ux@gmail.com" onClick={() => setOpen(false)}>Contact Us</a>
+          <a className="nav__link" href="mailto:bookfoliolive@gmail.com" onClick={() => setOpen(false)}>Contact Us</a>
           <a className="nav__btn" href={destination} onClick={handleSignInClick}>
             {app?.user ? 'My Bookshelf' : 'Sign In'}
           </a>

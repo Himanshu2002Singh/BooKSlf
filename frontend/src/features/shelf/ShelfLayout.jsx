@@ -78,7 +78,7 @@ export default function ShelfLayout({
         )}
         {onEditLink && !linkEditor && (
           <p className="sp-claim__custom">
-            If you need your own custom URL, <a href="mailto:amangupta.ux@gmail.com?subject=Custom%20URL%20Inquiry">connect with us</a>
+            If you need your own custom URL, <a href="mailto:bookfoliolive@gmail.com?subject=Custom%20URL%20Inquiry">connect with us</a>
           </p>
         )}
         {/* Shareable links removed from the top from all views */}

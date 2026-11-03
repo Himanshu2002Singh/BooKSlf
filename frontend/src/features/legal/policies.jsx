@@ -2,7 +2,7 @@ import { themePrice, themes } from '../../data/themes.js';
 
 // Copy for the legal pages. Premium looks are one-time digital purchases with no
 // refunds, returns or cancellations; keep the three documents consistent on that.
-export const CONTACT_EMAIL = 'amangupta.ux@gmail.com';
+export const CONTACT_EMAIL = 'bookfoliolive@gmail.com';
 export const LAST_UPDATED = '26 October 2026';
 
 const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;

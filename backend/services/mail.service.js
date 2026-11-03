@@ -56,7 +56,7 @@ export async function sendWelcomeEmail({ email, name }) {
     from: getSender(),
     to: email,
     subject: 'Welcome to Bookfolio! 📚 Your virtual bookshelf awaits',
-    text: `Hi ${userGreeting},\n\nWelcome to Bookfolio.live! We're thrilled to have you with us.\n\nEvery book you've ever loved deserves a home this beautiful. Here is how to get started:\n\n1. Add Your Books: Search over 20M+ titles, snap a shelf photo, or sync your Goodreads library.\n2. Choose Your Look: Pick from unique 3D and grid shelf themes.\n3. Share Your Shelf: Claim your custom bookfolio.live/<yourname> link.\n\nGo to your bookshelf: ${shelfLink}\n\nHave questions or feedback? Reply directly to this email or reach us at amangupta.ux@gmail.com.\n\nHappy Reading!\nThe Bookfolio Team\nhttps://bookfolio.live\n`,
+    text: `Hi ${userGreeting},\n\nWelcome to Bookfolio.live! We're thrilled to have you with us.\n\nEvery book you've ever loved deserves a home this beautiful. Here is how to get started:\n\n1. Add Your Books: Search over 20M+ titles, snap a shelf photo, or sync your Goodreads library.\n2. Choose Your Look: Pick from unique 3D and grid shelf themes.\n3. Share Your Shelf: Claim your custom bookfolio.live/<yourname> link.\n\nGo to your bookshelf: ${shelfLink}\n\nHave questions or feedback? Reply directly to this email or reach us at bookfoliolive@gmail.com.\n\nHappy Reading!\nThe Bookfolio Team\nhttps://bookfolio.live\n`,
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +104,7 @@ export async function sendWelcomeEmail({ email, name }) {
         </table>
 
         <p style="margin:0 0 16px;font-size:14px;line-height:22px;color:#6f655b;">
-          If you have any questions, feedback, or need a custom URL, feel free to reply directly to this email or write to us at <a href="mailto:amangupta.ux@gmail.com" style="color:#e13a00;text-decoration:underline;">amangupta.ux@gmail.com</a>.
+          If you have any questions, feedback, or need a custom URL, feel free to reply directly to this email or write to us at <a href="mailto:bookfoliolive@gmail.com" style="color:#e13a00;text-decoration:underline;">bookfoliolive@gmail.com</a>.
         </p>
       </td>
     </tr>

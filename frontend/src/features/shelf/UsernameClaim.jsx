@@ -62,7 +62,7 @@ export default function UsernameClaim({ initial = '', current = null, onCheck, o
       </div>
       <p id="claim-status" className="sp-claim__status" data-state={check.state} aria-live="polite">{check.message}</p>
       <p className="sp-claim__custom">
-        If you need your own custom URL, <a href="mailto:amangupta.ux@gmail.com?subject=Custom%20URL%20Inquiry">connect with us</a>
+        If you need your own custom URL, <a href="mailto:bookfoliolive@gmail.com?subject=Custom%20URL%20Inquiry">connect with us</a>
       </p>
     </form>
   );
