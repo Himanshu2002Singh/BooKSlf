@@ -6,6 +6,7 @@ import LibraryPanel from './panels/LibraryPanel.jsx';
 import PhotoPanel from './panels/PhotoPanel.jsx';
 import Modal from '../../components/Modal.jsx';
 import { shortTitle } from '../../lib/names.js';
+import { trackShelfUpdatePerformed } from '../../lib/analytics.js';
 
 const methods = [
   { id: 'goodreads', icon: '📖', title: 'Connect Goodreads', sub: 'Import your read shelves', link: 'Connect account →' },
@@ -33,11 +34,21 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
 
   function toggleLibraryBook(book) {
     const existing = books.find(item => bookKey(item) === bookKey(book));
+    trackShelfUpdatePerformed({
+      update_type: existing ? 'remove_library' : 'add_library',
+      books_affected_count: 1,
+      prior_to_update_book_count: books.length,
+    });
     if (existing) onBooksChange(books.filter(item => item.id !== existing.id));
     else onBooksChange([...books, { ...book, source: 'library' }]);
   }
 
   function removeBook(book) {
+    trackShelfUpdatePerformed({
+      update_type: 'remove_book',
+      books_affected_count: 1,
+      prior_to_update_book_count: books.length,
+    });
     onBooksChange(books.filter(item => item.id !== book.id));
     setEditor(null);
   }
@@ -45,6 +56,11 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
   function saveBook(book) {
     const clash = books.some(item => item.id !== book.id && bookKey(item) === bookKey(book));
     if (clash) return `${shortTitle(book.title)} by ${book.author} is already on your shelf.`;
+    trackShelfUpdatePerformed({
+      update_type: book.id ? 'edit_book' : 'add_manual',
+      books_affected_count: 1,
+      prior_to_update_book_count: books.length,
+    });
     if (book.id) onBooksChange(books.map(item => (item.id === book.id ? { ...item, ...book } : item)));
     else onBooksChange([...books, { ...book, id: newBookId(), source: editor.source }]);
     setEditor(null);

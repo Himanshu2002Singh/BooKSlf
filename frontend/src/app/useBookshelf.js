@@ -4,6 +4,7 @@ import { api } from '../lib/api.js';
 import { clearDraft, markReviewAsked, readDraft, saveDraft, wasReviewAsked } from '../lib/browserStorage.js';
 import { requestGoogleAccessToken } from '../features/auth/google.js';
 import { mergeBooks } from '../features/books/bookKey.js';
+import { identifyUser, trackOnboardingCompleted, trackOnboardingFailed, trackSignupStarted } from '../lib/analytics.js';
 import useBrowserRouter from './useBrowserRouter.js';
 import useRouteScroll from './useRouteScroll.js';
 
@@ -42,6 +43,7 @@ export default function useBookshelf() {
 
   function acceptSession({ user: nextUser, shelf, review: nextReview = null, goodreads: nextLink = null }) {
     setUser(nextUser ?? null);
+    if (nextUser) identifyUser(nextUser);
     setReview(nextUser ? nextReview : null);
     setGoodreads(nextUser ? nextLink : null);
     setGoodreadsNotice('');
@@ -168,11 +170,19 @@ export default function useBookshelf() {
     selectTheme: chosen => updateDraft({ themeId: chosen.id }),
 
     startSetup() {
+      trackSignupStarted({ entry_point: 'cta' });
       navigate(user ? (books.length ? '/shelf' : '/themes') : '/signup');
     },
 
     async signUp({ email, password }) {
-      signedIn(await api('/auth/signup', { method: 'POST', body: { email, password } }));
+      try {
+        const data = await api('/auth/signup', { method: 'POST', body: { email, password } });
+        signedIn(data);
+        if (data.user) identifyUser(data.user);
+      } catch (err) {
+        trackOnboardingFailed({ failure_reason: err.message, failed_step: 'signup' });
+        throw err;
+      }
     },
 
     async logIn({ email, password }) {
@@ -216,6 +226,10 @@ export default function useBookshelf() {
 
     // "Continue Creating Shelf": show the shelf, and ask for a review if the reader hasn't left one.
     finishBooks() {
+      trackOnboardingCompleted({
+        bookshelf_count_imported: books.length,
+        plan_tier: purchasedThemeIds?.length > 1 ? 'paid' : 'free',
+      });
       if (user && !review && !wasReviewAsked(user.id)) setAskForReview(true);
       navigate('/shelf');
     },

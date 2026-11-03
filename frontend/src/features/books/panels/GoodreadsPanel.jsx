@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BookList from '../BookList.jsx';
 import ImportStatus from '../ImportStatus.jsx';
 import { timeAgo } from '../../../lib/time.js';
+import { trackBookImportResult, trackBookImportStarted, trackOnboardingFailed } from '../../../lib/analytics.js';
 
 const books = count => `${count} ${count === 1 ? 'book' : 'books'}`;
 
@@ -17,10 +18,12 @@ export default function GoodreadsPanel({ hidden, books: imported, link, onConnec
     setBusy(kind);
     setResult({ tone: '', text: '' });
     try {
-      setResult({ tone: 'success', text: describe(await action()) });
+      const data = await action();
+      setResult({ tone: 'success', text: describe(data) });
       setChanging(false);
     } catch (failure) {
       setResult({ tone: 'error', text: failure.message });
+      trackOnboardingFailed({ failure_reason: failure.message, failed_step: 'goodreads_import' });
     } finally {
       setBusy('');
     }
@@ -28,13 +31,21 @@ export default function GoodreadsPanel({ hidden, books: imported, link, onConnec
 
   function connect(event) {
     event.preventDefault();
-    if (!profile.trim()) {
+    const cleanProfile = profile.trim();
+    if (!cleanProfile) {
       setResult({ tone: 'error', text: 'Paste your Goodreads profile link or user ID first.' });
       return;
     }
-    run('connecting', () => onConnect(profile.trim()), ({ found, added }) => (
-      `Connection with Goodreads Verified! Found ${books(found)}${added.length < found ? `, ${added.length} of them new to your shelf` : ''}.`
-    ));
+    trackBookImportStarted({ import_method: 'goodreads', shelf_id: cleanProfile });
+    run('connecting', () => onConnect(cleanProfile), ({ found, added }) => {
+      trackBookImportResult({
+        import_method: 'goodreads',
+        shelf_id: cleanProfile,
+        books_success_count: found,
+        books_failed_count: 0,
+      });
+      return `Connection with Goodreads Verified! Found ${books(found)}${added.length < found ? `, ${added.length} of them new to your shelf` : ''}.`;
+    });
   }
 
   const sync = () => run('syncing', onSync, ({ added }) => (

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import BookList from '../BookList.jsx';
 import ImportStatus from '../ImportStatus.jsx';
 import { scanShelfPhoto } from '../photo.js';
+import { trackBookImportResult, trackBookImportStarted, trackOnboardingFailed } from '../../../lib/analytics.js';
 
 const count = number => `${number} ${number === 1 ? 'book' : 'books'}`;
 
@@ -26,8 +27,14 @@ export default function PhotoPanel({ hidden, books, onImport, onEdit, onRemove, 
     setError('');
     setPhase('reading');
     scan.current = new AbortController();
+    trackBookImportStarted({ import_method: 'camera scan', session_source: 'onboarding' });
     try {
       const { books: recognized, capped } = await scanShelfPhoto(file, { signal: scan.current.signal });
+      trackBookImportResult({
+        import_method: 'camera scan',
+        books_success_count: recognized.length,
+        books_failed_count: 0,
+      });
       onImport(recognized);
       setLatest({ found: recognized.length, capped });
       setPhase('done');
@@ -35,6 +42,7 @@ export default function PhotoPanel({ hidden, books, onImport, onEdit, onRemove, 
       if (failure.name === 'AbortError') return;
       setError(failure.message);
       setPhase('idle');
+      trackOnboardingFailed({ failure_reason: failure.message, failed_step: 'photo_scan' });
     }
   }
 

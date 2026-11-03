@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { trackBookMetadataCorrected } from '../../lib/analytics.js';
 
 const presetColors = [
   '#b33939',
@@ -71,6 +72,20 @@ export default function BookEditor({ book, onSave, onCancel, onRemove }) {
       setError(result);
       return;
     }
+
+    const changed = [];
+    if (cleanTitle !== (book?.title || '')) changed.push('title');
+    if (cleanAuthor !== (book?.author || '')) changed.push('author');
+    if (cleanCover !== (book?.cover || '')) changed.push('cover');
+    if (rating !== (book?.rating ?? 5)) changed.push('rating');
+    if (changed.length > 0) {
+      trackBookMetadataCorrected({
+        book_id: book?.id || 'book_edit',
+        correction_type: changed.join(', '),
+        was_autofilled: Boolean(book?.source),
+      });
+    }
+
     setError('');
   }
 

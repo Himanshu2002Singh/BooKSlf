@@ -3,6 +3,7 @@ import { getTheme } from '../../data/themes.js';
 import BookDetailsModal from './BookDetailsModal.jsx';
 import ShelfView from './ShelfView.jsx';
 import { DecorPair, FlowNav } from '../../components/FlowShell.jsx';
+import { trackShelfShared } from '../../lib/analytics.js';
 import '../../styles/shelf-page.css';
 
 
@@ -32,6 +33,12 @@ export default function ShelfLayout({
     try {
       await navigator.clipboard.writeText(shelfUrl);
       flash(message);
+      trackShelfShared({
+        shelf_id: shownUrl || 'shelf',
+        share_method: 'copy_link',
+        audience_type: 'public',
+        share_target_count: 1,
+      });
     } catch {
       flash('Copy unavailable — select the link and copy it manually');
     }

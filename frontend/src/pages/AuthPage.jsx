@@ -1,10 +1,19 @@
+import { useEffect } from 'react';
 import usePageTitle from '../app/usePageTitle.js';
 import AuthForm from '../features/auth/AuthForm.jsx';
+import { trackSignupStarted } from '../lib/analytics.js';
 
 // /signup and /login.
 export default function AuthPage({ app }) {
   const isLogin = app.pathname === '/login';
   usePageTitle(isLogin ? 'Sign in' : 'Create your account');
+
+  useEffect(() => {
+    if (!isLogin) {
+      trackSignupStarted({ entry_point: 'signup_page' });
+    }
+  }, [isLogin]);
+
   return (
     <AuthForm
       key={app.pathname}

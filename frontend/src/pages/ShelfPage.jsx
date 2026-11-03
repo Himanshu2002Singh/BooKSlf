@@ -6,6 +6,7 @@ import ReviewDialog from '../features/reviews/ReviewDialog.jsx';
 import ShelfLayout from '../features/shelf/ShelfLayout.jsx';
 import UsernameClaim from '../features/shelf/UsernameClaim.jsx';
 import { shelfTitle } from '../lib/names.js';
+import { trackRetentionShelfActive } from '../lib/analytics.js';
 
 const REVIEW_DELAY = 1200; // Let the new shelf show for a moment before asking.
 
@@ -26,6 +27,18 @@ export default function ShelfPage({ app }) {
     const timer = window.setTimeout(() => setReviewOpen(true), REVIEW_DELAY);
     return () => window.clearTimeout(timer);
   }, [askForReview]);
+
+  // Track retention when reader visits their active shelf
+  useEffect(() => {
+    if (user?.id) {
+      const daysSinceSignup = user.since ? Math.max(0, Math.round((Date.now() - new Date(user.since).getTime()) / (1000 * 60 * 60 * 24))) : 0;
+      trackRetentionShelfActive({
+        days_since_signup: daysSinceSignup,
+        active_shelf_count: 1,
+        primary_action: 'view',
+      });
+    }
+  }, [user?.id]);
 
   function closeReview() {
     setReviewOpen(false);
