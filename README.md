@@ -31,6 +31,7 @@ the frontend with `API_PROXY=http://localhost:4000` set.
 ```sh
 cd frontend
 npm install
+
 cp .env.example .env
 npm run dev
 ```
