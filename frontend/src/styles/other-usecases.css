@@ -70,12 +70,12 @@
 
 .uc-hero__title {
   margin: 0;
-  font-family: 'Syne', 'Playfair Display', serif;
-  font-weight: 800;
-  font-size: 52px;
-  line-height: 1.15;
-  color: #1c1209;
-  letter-spacing: -0.02em;
+  font-family: 'Wendy One', sans-serif;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: normal;
+  color: #3d3c3c;
+  text-align: center;
 }
 
 .uc-hero__title span {
@@ -93,29 +93,38 @@
   font-weight: 400;
 }
 
+.uc-hero__content .btns {
+  margin-top: 36px;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .uc-hero__cta {
   margin-top: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  padding: 0 32px;
-  border: 1.5px solid #e13a00;
-  border-radius: 999px;
+  padding: 16px 32px;
+  border: 1px solid #e13a00;
+  border-radius: 16px;
   background: #fff;
   color: #e13a00;
-  font-size: 15px;
+  font-family: 'Avenir Next', 'Avenir', 'Nunito Sans', sans-serif;
+  font-size: 18px;
   font-weight: 600;
+  line-height: normal;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(225, 58, 0, 0.08);
+  filter: drop-shadow(0 12px 12.5px rgba(0, 0, 0, 0.25));
   transition: all 0.2s ease;
 }
 
 .uc-hero__cta:hover {
-  background: #fff6f1;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(225, 58, 0, 0.16);
+  background: #fff5ee;
+  transform: translateY(-3px);
 }
 
 /* ---------------- USECASES SHOWCASE SECTION ---------------- */
@@ -177,16 +186,20 @@
 .uc-laptop {
   position: relative;
   width: 100%;
-  max-width: 720px;
-  aspect-ratio: 773 / 431;
+  max-width: 760px;
   margin: 0 auto;
 }
 
 .uc-laptop > img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: drop-shadow(0 24px 28px rgba(0, 0, 0, 0.22));
+  height: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.uc-laptop:hover > img {
+  transform: translateY(-4px);
 }
 
 .uc-laptop__screen {
@@ -557,26 +570,30 @@
 .uc-ideas__submit {
   width: 100%;
   max-width: 540px;
-  height: 48px;
-  margin-top: 4px;
-  border: 1.5px solid #e13a00;
-  border-radius: 999px;
-  background: #fff;
-  color: #e13a00;
-  font-size: 16px;
-  font-weight: 700;
+  height: 54px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 16px;
+  background: #e13a00;
+  color: #faf7f2;
+  font-family: 'Avenir Next', 'Avenir', 'Nunito Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  filter: drop-shadow(0 8px 16px rgba(225, 58, 0, 0.28));
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .uc-ideas__submit:hover:not(:disabled) {
-  background: #fff6f1;
-  transform: translateY(-1px);
+  background: #c93200;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 12px 20px rgba(225, 58, 0, 0.35));
 }
 
 .uc-ideas__submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .uc-ideas__success {
@@ -620,6 +637,17 @@
   }
   .uc-hero__subtitle {
     font-size: 15px;
+  }
+  .uc-hero__content .btns {
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    gap: 12px;
+  }
+  .uc-hero__content .btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
   }
   .uc-item__title {
     font-size: 28px;

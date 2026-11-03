@@ -79,6 +79,7 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
         onConnect={onConnectGoodreads}
         onSync={onSyncGoodreads}
         onEdit={editBook}
+        onRemove={removeBook}
         onAddManually={addManually('goodreads')}
       />
       <PhotoPanel
@@ -86,6 +87,7 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
         books={fromSource('photo')}
         onImport={picks => importBooks('photo', picks)}
         onEdit={editBook}
+        onRemove={removeBook}
         onAddManually={addManually('photo')}
       />
       <LibraryPanel
@@ -97,14 +99,14 @@ export default function AddBooks({ books = [], goodreads, onConnectGoodreads, on
         onAddManually={addManually('library')}
       />
 
-      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+      <div className="fg-flow-actions">
         {onBackToShelf && (
-          <button type="button" className="sp-btn" style={{ height: 56, padding: '0 28px', fontSize: 16, borderRadius: 16 }} onClick={onBackToShelf}>
+          <button type="button" className="sp-btn" onClick={onBackToShelf}>
             Back to Shelf
           </button>
         )}
         {books.length > 0 && (
-          <button type="button" className="fg-cta" style={{ flex: 1, minWidth: 240, maxWidth: 360 }} onClick={onContinue}>
+          <button type="button" className="fg-cta" onClick={onContinue}>
             Continue Creating Shelf
           </button>
         )}

@@ -69,6 +69,11 @@ export default function ShelfLayout({
             <button type="button" onClick={() => copyLink()}>Copy link</button>
           </div>
         )}
+        {onEditLink && !linkEditor && (
+          <p className="sp-claim__custom">
+            If you need your own custom URL, <a href="mailto:amangupta.ux@gmail.com?subject=Custom%20URL%20Inquiry">connect with us</a>
+          </p>
+        )}
         {/* Shareable links removed from the top from all views */}
         <p className="sp-status" role="status" aria-live="polite">{status || notice}</p>
         {tools}

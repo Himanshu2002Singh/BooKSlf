@@ -14,6 +14,7 @@ export default function Checkout({ theme, name = '', email = '', onBack, onPaid 
   const [discountOpen, setDiscountOpen] = useState(false);
   const [discount, setDiscount] = useState('');
   const [discountMessage, setDiscountMessage] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [paying, setPaying] = useState(false);
   const configError = razorpayConfigError();
@@ -29,6 +30,7 @@ export default function Checkout({ theme, name = '', email = '', onBack, onPaid 
     if (form.phone && !/^\d{10}$/.test(form.phone.replace(/\s+/g, ''))) return 'Enter a 10-digit phone number, or leave it empty.';
     if (!form.address.trim()) return 'Enter your billing address.';
     if (form.business && !form.gstin.trim()) return 'Enter your GSTIN to purchase as a business.';
+    if (!acceptedTerms) return 'Please accept the Terms & Conditions and Refund Policy to continue.';
     return '';
   }
 
@@ -161,11 +163,25 @@ export default function Checkout({ theme, name = '', email = '', onBack, onPaid 
             </label>
           )}
 
+          <label className="pp-check pp-check--terms">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={event => {
+                setAcceptedTerms(event.target.checked);
+                if (error) setError('');
+              }}
+            />
+            <span>
+              I accept the <a href="/terms" target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>Terms &amp; Conditions</a> and <a href="/refunds" target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}>Refund &amp; Cancellation Policy</a> by Bookfolio.live
+            </span>
+          </label>
+
           {error && <p className="pp-error" role="alert">{error}</p>}
 
           <button type="submit" className="pp-pay" disabled={paying}>{paying ? 'Opening Razorpay…' : 'Continue to Payment'}</button>
           <p className="pp-terms">
-            By continuing you agree to our <a href="/terms" target="_blank" rel="noreferrer">Terms &amp; Conditions</a> and <a href="/refunds" target="_blank" rel="noreferrer">Refund &amp; Cancellation Policy</a>. All purchases are final: no refunds or cancellations.
+            All purchases are final: no refunds or cancellations.
           </p>
 
           <p className="pp-legal">Payments are processed securely by Razorpay. This checkout runs in <strong>test mode</strong> — use Razorpay test cards or UPI <code>success@razorpay</code>; no real money is charged.</p>

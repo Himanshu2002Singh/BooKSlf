@@ -7,7 +7,7 @@ const count = number => `${number} ${number === 1 ? 'book' : 'books'}`;
 
 // "Photograph your shelves": Gemini reads the spines in a photo (through our API) and each
 // book is matched on Open Library. Readers can scan one shelf after another.
-export default function PhotoPanel({ hidden, books, onImport, onEdit, onAddManually }) {
+export default function PhotoPanel({ hidden, books, onImport, onEdit, onRemove, onAddManually }) {
   const [phase, setPhase] = useState(() => (books.length ? 'done' : 'idle'));
   const [latest, setLatest] = useState(null); // { found, capped } for the latest photo; null until one is scanned here.
   const [error, setError] = useState('');
@@ -67,7 +67,7 @@ export default function PhotoPanel({ hidden, books, onImport, onEdit, onAddManua
       )}
       {error && <p className="fg-field-error" role="alert">{error}</p>}
       {(phase === 'done' || books.length > 0) && (
-        <BookList title={`Recognized Books (${books.length})`} books={books} action="Edit Details" onAction={onEdit} onAddManually={onAddManually} />
+        <BookList title={`Recognized Books (${books.length})`} books={books} action="Edit Details" onAction={onEdit} onRemove={onRemove} onAddManually={onAddManually} />
       )}
     </section>
   );

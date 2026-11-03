@@ -131,7 +131,7 @@ describe('with database', { skip: !process.env.DATABASE_URL && 'DATABASE_URL not
     const realFetch = globalThis.fetch;
     let goodreadsReads = 0;
     const fetchMock = mock.method(globalThis, 'fetch', (url, options) => {
-      const shelf = String(url).match(/goodreads\.com\/review\/list_rss\/123\?shelf=([\w-]+)/)?.[1];
+      const shelf = String(url).match(/goodreads\.com\/review\/(?:custom_widget|list_rss)\/123\?shelf=([\w-]+)/)?.[1];
       if (!shelf) return realFetch(url, options);
       goodreadsReads += 1;
       return Promise.resolve(new Response(rss(shelves[shelf])));

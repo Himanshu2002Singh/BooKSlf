@@ -48,13 +48,13 @@ export default function ThemePicker({ selectedTheme, books, purchasedThemeIds = 
         })}
       </div>
 
-      <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginTop: 32 }}>
+      <div className="fg-flow-actions">
         {onBackToShelf && (
-          <button type="button" className="sp-btn" style={{ height: 56, padding: '0 28px', fontSize: 16, borderRadius: 16 }} onClick={onBackToShelf}>
+          <button type="button" className="sp-btn" onClick={onBackToShelf}>
             Back to Shelf
           </button>
         )}
-        <button type="button" className="fg-cta" style={{ flex: 1, minWidth: 240, maxWidth: 360 }} onClick={onContinue}>
+        <button type="button" className="fg-cta" onClick={onContinue}>
           Continue Fetching Books
         </button>
       </div>

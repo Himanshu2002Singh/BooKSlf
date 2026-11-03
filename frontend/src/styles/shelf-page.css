@@ -91,6 +91,9 @@
 .sp-claim .sp-link button:disabled { opacity: .45; cursor: not-allowed; text-decoration: none; }
 .sp-claim__status { min-height: 20px; margin: 6px 0 0; font: 500 13px/20px 'Inter', sans-serif; text-align: center; color: #6f655b; }
 .sp-claim__status[data-state='ok'] { color: #15803d; }
+.sp-claim__custom { margin: 6px 0 0; font: 500 13px/20px 'Inter', sans-serif; text-align: center; color: #6f655b; }
+.sp-claim__custom a { color: #7d3c1c; text-decoration: underline; font-weight: 600; cursor: pointer; }
+.sp-claim__custom a:hover { color: #e13a00; }
 .sp-link__edit { color: #6f655b !important; }
 
 /* Owner-only links under the share buttons: Goodreads sync and the review */

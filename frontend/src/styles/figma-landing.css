@@ -247,40 +247,6 @@
   box-sizing: border-box;
 }
 
-.footer-extra {
-  width: 100%;
-  background: #faf7f2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 24px;
-  padding: 14px 24px;
-  border-bottom: 1px solid rgba(28, 18, 9, 0.06);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  box-sizing: border-box;
-}
-
-.footer-extra a {
-  color: #c84b1d;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.footer-extra a:hover {
-  color: #9e3612;
-  text-decoration: underline;
-}
-
-.footer-dot {
-  color: rgba(28, 18, 9, 0.3);
-  font-size: 12px;
-  user-select: none;
-}
-
 .footer-wrap .legal-foot {
   background: #faf7f2;
   border-top: none;

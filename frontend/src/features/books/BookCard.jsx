@@ -2,7 +2,7 @@ import { titleParts } from '../../lib/names.js';
 
 // One book in an import list: cover (or a coloured stand-in), title, author and one action.
 // Search results also show the subtitle, which tells apart books that share a main title.
-export default function BookCard({ book, action, onAction, selected, showSubtitle = false }) {
+export default function BookCard({ book, action, onAction, onRemove, selected, showSubtitle = false }) {
   const { main: title, subtitle } = titleParts(book.title);
   return (
     <div className="fg-book" data-selected={selected || undefined}>
@@ -15,7 +15,28 @@ export default function BookCard({ book, action, onAction, selected, showSubtitl
         <span className="fg-book__title">{title}</span>
         {showSubtitle && subtitle && <span className="fg-book__subtitle">{subtitle}</span>}
         <span className="fg-book__author">{book.author}</span>
-        <button type="button" className="fg-book__action" onClick={onAction} aria-label={`${action}: ${title}`}>{action}</button>
+        <div className="fg-book__actions">
+          {action && (
+            <button
+              type="button"
+              className={`fg-book__action ${action === 'Remove' ? 'fg-book__action--remove' : ''}`}
+              onClick={onAction}
+              aria-label={`${action}: ${title}`}
+            >
+              {action}
+            </button>
+          )}
+          {onRemove && (
+            <button
+              type="button"
+              className="fg-book__action fg-book__action--remove"
+              onClick={onRemove}
+              aria-label={`Remove: ${title}`}
+            >
+              Remove
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

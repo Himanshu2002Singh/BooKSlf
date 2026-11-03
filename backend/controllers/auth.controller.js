@@ -2,7 +2,7 @@
 import * as PasswordReset from '../models/passwordReset.model.js';
 import * as User from '../models/user.model.js';
 import { verifyGoogleAccessToken } from '../services/google.service.js';
-import { sendPasswordReset } from '../services/mail.service.js';
+import { sendPasswordReset, sendWelcomeEmail } from '../services/mail.service.js';
 import { HttpError } from '../utils/HttpError.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 import { endSession, startSession } from '../utils/session.js';
@@ -35,6 +35,7 @@ export async function signup(request, response) {
   if (existing) throw new HttpError(409, existing.password_hash ? 'An account with this email already exists. Sign in instead.' : GOOGLE_ONLY);
   const name = String(request.body.name ?? '').trim() || nameFromEmail(email);
   const user = await User.create({ email, name, passwordHash: await hashPassword(request.body.password) });
+  sendWelcomeEmail({ email: user.email, name: user.name }).catch(err => console.error('[mail] Welcome email error:', err));
   await signIn(request, response, user);
 }
 
@@ -56,11 +57,18 @@ export async function login(request, response) {
 export async function google(request, response) {
   const profile = await verifyGoogleAccessToken(request.body.accessToken);
   let user = await User.findByGoogleSub(profile.sub);
+  let isFirstTime = false;
   if (!user) {
     const sameEmail = await User.findByEmail(profile.email);
-    user = sameEmail
-      ? await User.linkGoogle(sameEmail.id, profile) // Google has verified this email, so it is the same reader.
-      : await User.create({ email: profile.email, name: profile.name || nameFromEmail(profile.email), googleSub: profile.sub, picture: profile.picture });
+    if (sameEmail) {
+      user = await User.linkGoogle(sameEmail.id, profile); // Google has verified this email, so it is the same reader.
+    } else {
+      user = await User.create({ email: profile.email, name: profile.name || nameFromEmail(profile.email), googleSub: profile.sub, picture: profile.picture });
+      isFirstTime = true;
+    }
+  }
+  if (isFirstTime) {
+    sendWelcomeEmail({ email: user.email, name: user.name }).catch(err => console.error('[mail] Welcome email error:', err));
   }
   await signIn(request, response, user);
 }

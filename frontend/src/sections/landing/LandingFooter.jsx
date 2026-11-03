@@ -49,16 +49,12 @@ export default function LandingFooter({ app }) {
         <nav className="nav__links" aria-label="Footer navigation">
           <a className="nav__link" href="/" onClick={handleHomeClick}>Home</a>
           <a className={`nav__link${isOtherUsecases ? ' nav__link--active' : ''}`} href="/other-usecases" onClick={handleOtherUsecasesClick}>Other Usecases</a>
+          <a className="nav__link" href="https://docs.google.com/forms/d/e/1FAIpQLSe1eG6q1MAQKkfRvDTqkQaGRi38TCVGMxKRUdVNNO21cpc9bA/viewform?usp=dialog" target="_blank" rel="noreferrer">Submit Feedback</a>
           <a className="nav__link" href="mailto:amangupta.ux@gmail.com">Contact Us</a>
-          <a className="nav__btn" href={destination} onClick={handleSignInClick}>Sign In</a>
+          <a className="nav__btn" href={destination} onClick={handleSignInClick}>
+            {app?.user ? 'My Bookshelf' : 'Sign In'}
+          </a>
         </nav>
-      </div>
-
-      {/* Extra resource links */}
-      <div className="footer-extra">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1eG6q1MAQKkfRvDTqkQaGRi38TCVGMxKRUdVNNO21cpc9bA/viewform?usp=dialog" target="_blank" rel="noreferrer">
-          Submit Feedback
-        </a>
       </div>
 
       {/* Legal & Credits */}

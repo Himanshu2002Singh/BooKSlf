@@ -7,7 +7,7 @@ const books = count => `${count} ${count === 1 ? 'book' : 'books'}`;
 
 // "Connect Goodreads": paste a profile link once and its Read and Currently Reading books come in.
 // The profile stays connected: new books on it sync in when the app opens, or with "Sync now".
-export default function GoodreadsPanel({ hidden, books: imported, link, onConnect, onSync, onEdit, onAddManually }) {
+export default function GoodreadsPanel({ hidden, books: imported, link, onConnect, onSync, onEdit, onRemove, onAddManually }) {
   const [profile, setProfile] = useState('');
   const [changing, setChanging] = useState(false);
   const [busy, setBusy] = useState(''); // '' | 'connecting' | 'syncing'
@@ -82,7 +82,7 @@ export default function GoodreadsPanel({ hidden, books: imported, link, onConnec
       {!busy && result.tone === 'success' && <ImportStatus tone="success">{result.text}</ImportStatus>}
       {!busy && result.tone === 'error' && <p id="goodreads-result" className="fg-field-error" role="alert">{result.text}</p>}
       {imported.length > 0 && (
-        <BookList title={`Imported books from Goodreads (${imported.length})`} books={imported} action="Edit Details" onAction={onEdit} onAddManually={onAddManually} />
+        <BookList title={`Imported books from Goodreads (${imported.length})`} books={imported} action="Edit Details" onAction={onEdit} onRemove={onRemove} onAddManually={onAddManually} />
       )}
     </section>
   );

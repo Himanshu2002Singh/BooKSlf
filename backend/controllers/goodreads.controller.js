@@ -12,11 +12,18 @@ const AUTO_SYNC_MINUTES = 10;
 // Adds the profile's Read and Currently Reading books to the shelf and keeps the profile linked.
 // Answers { added, found, goodreads }: added is what the shelf didn't have yet.
 export async function connect(request, response) {
+  console.log('\n--- [goodreads] Connect Request Start ---');
+  console.log('[goodreads] User:', request.user?.id, `(${request.user?.email})`);
+  console.log('[goodreads] Input body:', JSON.stringify(request.body));
   const goodreadsId = await resolveUserId(request.body?.profile);
+  console.log('[goodreads] Resolved Goodreads ID:', goodreadsId);
   const books = await readShelves(goodreadsId);
+  console.log(`[goodreads] Total books fetched: ${books.length}`);
   if (!books.length) throw new HttpError(404, 'No books found on this profile’s Read or Currently Reading shelves.');
   const added = await Shelf.addBooks(request.user.id, toShelfBooks(books));
   const link = await GoodreadsLink.save(request.user.id, { goodreadsId, seenIds: books.map(book => book.goodreadsId) });
+  console.log(`[goodreads] Shelf updated: ${added.length} added, ${books.length} found total`);
+  console.log('--- [goodreads] Connect Request End ---\n');
   response.json({ added, found: books.length, goodreads: goodreadsView(link) });
 }
 

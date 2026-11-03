@@ -8,170 +8,6 @@ import { art } from '../sections/landing/content.jsx';
 import '../styles/figma-landing.css';
 import '../styles/other-usecases.css';
 
-/* ----------------- MOCKUP COMPONENTS ----------------- */
-
-function MusicAlbumsShelf() {
-  const topAlbums = [
-    { title: 'The Dark Side of the Moon', artist: 'Pink Floyd', bg: 'linear-gradient(135deg, #0a0a0a 0%, #1e1e24 100%)', label: '#e13a00', art: '🌈' },
-    { title: 'Random Access Memories', artist: 'Daft Punk', bg: 'linear-gradient(135deg, #1b2838 0%, #2a475e 100%)', label: '#f59e0b', art: '🤖' },
-    { title: 'Rumours', artist: 'Fleetwood Mac', bg: 'linear-gradient(135deg, #3d312a 0%, #635043 100%)', label: '#d97706', art: '✨' },
-    { title: 'Thriller', artist: 'Michael Jackson', bg: 'linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%)', label: '#ef4444', art: '⚡' },
-  ];
-
-  const bottomAlbums = [
-    { title: 'Abbey Road', artist: 'The Beatles', bg: 'linear-gradient(135deg, #064e3b 0%, #047857 100%)', label: '#10b981', art: '🚶‍♂️' },
-    { title: 'Blonde', artist: 'Frank Ocean', bg: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)', label: '#60a5fa', art: '🌊' },
-    { title: 'Currents', artist: 'Tame Impala', bg: 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%)', label: '#a78bfa', art: '🔮' },
-    { title: 'DAMN.', artist: 'Kendrick Lamar', bg: 'linear-gradient(135deg, #831843 0%, #be185d 100%)', label: '#f43f5e', art: '🔥' },
-  ];
-
-  return (
-    <div className="uc-laptop__screen uc-screen--music">
-      <div className="uc-screen-head">
-        <h4>My Top Albums</h4>
-        <span>12 albums · listening since 2018</span>
-      </div>
-      <div className="uc-music-shelf">
-        <div className="uc-music-row">
-          <div className="uc-music-items">
-            {topAlbums.map((item, idx) => (
-              <div key={idx} className="uc-album" title={`${item.title} by ${item.artist}`}>
-                <div className="uc-album__vinyl">
-                  <div className="uc-album__label" style={{ background: item.label }} />
-                </div>
-                <div className="uc-album__cover" style={{ background: item.bg }}>
-                  <span>{item.art}<br />{item.title.split(' ')[0]}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-
-        <div className="uc-music-row">
-          <div className="uc-music-items">
-            {bottomAlbums.map((item, idx) => (
-              <div key={idx} className="uc-album" title={`${item.title} by ${item.artist}`}>
-                <div className="uc-album__vinyl">
-                  <div className="uc-album__label" style={{ background: item.label }} />
-                </div>
-                <div className="uc-album__cover" style={{ background: item.bg }}>
-                  <span>{item.art}<br />{item.title.split(' ')[0]}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FavoriteMoviesShelf() {
-  const topMovies = [
-    { title: 'Interstellar', year: '2014', bg: 'linear-gradient(180deg, #09122c 0%, #162447 50%, #e43f5a 100%)', emoji: '🚀' },
-    { title: 'Inception', year: '2010', bg: 'linear-gradient(180deg, #1b1b2f 0%, #1f4068 60%, #e43f5a 100%)', emoji: '🌀' },
-    { title: 'Dune', year: '2021', bg: 'linear-gradient(180deg, #3d2314 0%, #87431d 50%, #d87d35 100%)', emoji: '🏜️' },
-    { title: 'The Dark Knight', year: '2008', bg: 'linear-gradient(180deg, #0f172a 0%, #1e293b 60%, #0284c7 100%)', emoji: '🦇' },
-  ];
-
-  const bottomMovies = [
-    { title: 'Pulp Fiction', year: '1994', bg: 'linear-gradient(180deg, #450a0a 0%, #7f1d1d 50%, #ea580c 100%)', emoji: '🔫' },
-    { title: 'Grand Budapest', year: '2014', bg: 'linear-gradient(180deg, #831843 0%, #be185d 50%, #f472b6 100%)', emoji: '🏨' },
-    { title: 'Spirited Away', year: '2001', bg: 'linear-gradient(180deg, #134e4a 0%, #0f766e 50%, #f59e0b 100%)', emoji: '🐉' },
-    { title: 'Parasite', year: '2019', bg: 'linear-gradient(180deg, #14532d 0%, #166534 50%, #84cc16 100%)', emoji: '🍑' },
-  ];
-
-  return (
-    <div className="uc-laptop__screen uc-screen--movies">
-      <div className="uc-screen-head">
-        <h4>My Top Movies</h4>
-        <span>Cinematic favorites · 10 films</span>
-      </div>
-      <div className="uc-movies-shelf">
-        <div className="uc-movie-row">
-          <div className="uc-movie-items">
-            {topMovies.map((movie, idx) => (
-              <div key={idx} className="uc-poster" style={{ background: movie.bg }} title={`${movie.title} (${movie.year})`}>
-                <span style={{ fontSize: 13, marginBottom: 'auto' }}>{movie.emoji}</span>
-                <span>{movie.title}</span>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-
-        <div className="uc-movie-row">
-          <div className="uc-movie-items">
-            {bottomMovies.map((movie, idx) => (
-              <div key={idx} className="uc-poster" style={{ background: movie.bg }} title={`${movie.title} (${movie.year})`}>
-                <span style={{ fontSize: 13, marginBottom: 'auto' }}>{movie.emoji}</span>
-                <span>{movie.title}</span>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function NewslettersShelf() {
-  const topNews = [
-    { name: 'The Profile', author: 'Polina P.', color: '#ea580c', icon: '👤', snippet: 'Deep profiles of high achievers and entrepreneurs.' },
-    { name: 'Dense Discovery', author: 'Kai Brach', color: '#eab308', icon: '💡', snippet: 'Weekly curation of design, productivity & ethics.' },
-    { name: 'Not Boring', author: 'Packy M.', color: '#0284c7', icon: '🚀', snippet: 'Business strategy & exponential tech trends.' },
-  ];
-
-  const bottomNews = [
-    { name: 'Morning Brew', author: 'Daily Brief', color: '#f59e0b', icon: '☕', snippet: 'Fast business, finance & tech news every morning.' },
-    { name: 'Stratechery', author: 'Ben Thompson', color: '#6366f1', icon: '📊', snippet: 'Deep analysis of the business of technology.' },
-    { name: 'The Generalist', author: 'Mario G.', color: '#ec4899', icon: '🧠', snippet: 'Clear breakdowns of breakout companies and IPOs.' },
-  ];
-
-  return (
-    <div className="uc-laptop__screen uc-screen--newsletters">
-      <div className="uc-screen-head">
-        <h4>My Top Newsletters</h4>
-        <span>Weekly reads & essays</span>
-      </div>
-      <div className="uc-news-shelf">
-        <div className="uc-news-row">
-          <div className="uc-news-items">
-            {topNews.map((item, idx) => (
-              <div key={idx} className="uc-news-card" title={`${item.name} by ${item.author}`}>
-                <div className="uc-news-card__top">
-                  <div className="uc-news-card__icon" style={{ background: item.color }}>{item.icon}</div>
-                  <span className="uc-news-card__name">{item.name}</span>
-                </div>
-                <div className="uc-news-card__snippet">{item.snippet}</div>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-
-        <div className="uc-news-row">
-          <div className="uc-news-items">
-            {bottomNews.map((item, idx) => (
-              <div key={idx} className="uc-news-card" title={`${item.name} by ${item.author}`}>
-                <div className="uc-news-card__top">
-                  <div className="uc-news-card__icon" style={{ background: item.color }}>{item.icon}</div>
-                  <span className="uc-news-card__name">{item.name}</span>
-                </div>
-                <div className="uc-news-card__snippet">{item.snippet}</div>
-              </div>
-            ))}
-          </div>
-          <div className="uc-shelf-plank" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ----------------- MAIN PAGE COMPONENT ----------------- */
 
 export default function OtherUsecasesPage({ app }) {
@@ -260,9 +96,14 @@ export default function OtherUsecasesPage({ app }) {
             <p className="uc-hero__subtitle">
               Your taste is bigger than a reading list. Turn the music, movies, games, podcasts, and ideas that shape you into one beautiful, shareable place.
             </p>
-            <a href="#examples" className="uc-hero__cta" onClick={scrollToExamples}>
-              See Examples Below
-            </a>
+            <div className="btns">
+              <button type="button" className="btn s av" onClick={() => app?.startSetup ? app.startSetup() : (window.location.href = '/login')}>
+                Create your bookshelf -  It’s Free
+              </button>
+              <a href="#examples" className="btn o av" onClick={scrollToExamples}>
+                Explore Examples ↓
+              </a>
+            </div>
           </div>
         </section>
 
@@ -278,8 +119,11 @@ export default function OtherUsecasesPage({ app }) {
               </p>
             </div>
             <div className="uc-laptop">
-              <img src={art('laptop.webp')} alt="Music albums shelf view on laptop" />
-              <MusicAlbumsShelf />
+              <img
+                src="/usecases/music_album.png"
+                alt="Music albums shelf view on laptop"
+                loading="lazy"
+              />
             </div>
           </div>
 
@@ -293,8 +137,11 @@ export default function OtherUsecasesPage({ app }) {
               </p>
             </div>
             <div className="uc-laptop">
-              <img src={art('laptop.webp')} alt="Favorite movies shelf view on laptop" />
-              <FavoriteMoviesShelf />
+              <img
+                src="/usecases/favourite_movies.png"
+                alt="Favorite movies shelf view on laptop"
+                loading="lazy"
+              />
             </div>
           </div>
 
@@ -308,8 +155,11 @@ export default function OtherUsecasesPage({ app }) {
               </p>
             </div>
             <div className="uc-laptop">
-              <img src={art('laptop.webp')} alt="Newsletters shelf view on laptop" />
-              <NewslettersShelf />
+              <img
+                src="/usecases/newsletter.png"
+                alt="Newsletters shelf view on laptop"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>

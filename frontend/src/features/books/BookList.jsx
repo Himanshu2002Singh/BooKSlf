@@ -1,7 +1,7 @@
 import BookCard from './BookCard.jsx';
 
 // Heading with "Add Book Manually", then the books already added from one source.
-export default function BookList({ title, books, action, onAction, onAddManually }) {
+export default function BookList({ title, books, action, onAction, onRemove, onAddManually }) {
   return (
     <>
       <div className="fg-list-head">
@@ -10,7 +10,15 @@ export default function BookList({ title, books, action, onAction, onAddManually
       </div>
       {books.length > 0 && (
         <div className="fg-book-grid">
-          {books.map(book => <BookCard key={book.id} book={book} action={action} onAction={() => onAction(book)} />)}
+          {books.map(book => (
+            <BookCard
+              key={book.id}
+              book={book}
+              action={action}
+              onAction={() => onAction?.(book)}
+              onRemove={onRemove ? () => onRemove(book) : undefined}
+            />
+          ))}
         </div>
       )}
     </>
