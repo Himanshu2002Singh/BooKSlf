@@ -42,7 +42,9 @@ function getSender() {
 export async function sendWelcomeEmail({ email, name }) {
   if (!email) return;
   const userGreeting = name ? name.split(' ')[0] : 'there';
-  const origin = process.env.APP_ORIGIN || 'https://bookfolio.live';
+  // Always the public site: APP_ORIGIN points at localhost in dev/.env, and a welcome
+  // email is read long after on any device, so its links must never go there.
+  const origin = 'https://bookfolio.live';
   const shelfLink = `${origin}/shelf`;
 
   const transporter = createTransporter();
@@ -73,7 +75,7 @@ export async function sendWelcomeEmail({ email, name }) {
     </tr>
     <tr>
       <td style="padding:32px 32px 24px;">
-        <h1 style="margin:0 0 16px;font-size:24px;line-height:32px;color:#1c1209;">Welcome to Bookfolio, ${userGreeting}! 📚</h1>
+        <h1 style="margin:0 0 16px;font-size:24px;line-height:32px;color:#1c1209;">Welcome to Bookfolio! 📚</h1>
         <p style="margin:0 0 20px;font-size:15px;line-height:24px;color:#4a4036;">
           We're delighted to welcome you! Your reading journey deserves a dedicated, beautiful space online. You can now curate your favorite reads, customize themes, and share your shelf with fellow readers.
         </p>
